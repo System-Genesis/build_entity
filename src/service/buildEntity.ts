@@ -1,10 +1,7 @@
-import { match_Other } from './match';
+import { initEntity } from './initEntity';
 import { entity } from '../types/entityType';
+import { akaStr, dataSourceHierarchy, primeStr } from '../config/entity.config';
 
-const enumD: string[] = ['a', 'b'];
-const primeStr = 'getPrime';
-const akaStr = 'getPrime';
-// cts - prime vs cts
 const source = () => {
   return (curr: any, _: any) => {
     // enum fn
@@ -18,7 +15,7 @@ export const buildEntity = async (data: any) => {
   let aka: any = [];
   let prime: any;
 
-  enumD.forEach((d) => {
+  dataSourceHierarchy.forEach((d) => {
     if (data[d]) {
       if (d === akaStr) aka = data[d];
       else if (d === primeStr) prime = data[d];
@@ -38,10 +35,10 @@ export const buildEntity = async (data: any) => {
   dataArr = [...aka, ...prime, ...dataArr];
 
   if (dataArr.length > 0) {
-    let entity: Partial<entity> = await match_Other(dataArr[0] as entity);
+    let entity: Partial<entity> = await initEntity(dataArr[0] as entity);
 
     for (let i = 1; i < dataArr.length; i++) {
-      entity = await match_Other(dataArr[i] as entity, entity as entity);
+      entity = await initEntity(dataArr[i] as entity, entity as entity);
     }
   }
 };
