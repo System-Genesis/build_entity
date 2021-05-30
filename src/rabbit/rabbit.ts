@@ -1,10 +1,8 @@
 import menash, { ConsumerMessage } from 'menashmq';
-import config from '../config';
+import config from './rabbit.config';
+import { buildEntity } from '../service/buildEntity';
 
 export const connectRabbit = async () => {
-  if (config.rabbit.isMockKiddy && config.rabbit.isMockMatchToKart) {
-    return;
-  }
   console.log('Connecting to Rabbit...');
 
   await menash.connect(config.rabbit.uri, config.rabbit.retryOptions);
@@ -13,35 +11,34 @@ export const connectRabbit = async () => {
 
   await menash.declareQueue(config.rabbit.getData);
   await menash.declareQueue(config.rabbit.sendData);
-  // await menash.declareTopology({
-  //     queues: [{ name: 'feature-queue', options: { durable: true } }],
-  //     exchanges: [{ name: 'feature-exchange', type: 'fanout', options: { durable: true } }],
-  //     bindings: [{ source: 'feature-exchange', destination: 'feature-queue' }],
-  //     consumers: [{ queueName: 'feature-queue', onMessage: featureConsumeFunction }],
-  // });
+
   if (config.rabbit.isMockMatchToKart) {
     return;
   }
 
-  await menash.queue(config.rabbit.afterMatchQName).activateConsumer(
+  await menash.queue(config.rabbit.getData).activateConsumer(
     async (msg: ConsumerMessage) => {
       let record: any = msg.getContent();
 
-      if (!config.rabbit.isMockKiddy) {
-        await menash.send(config.rabbit.kiddyQName, JSON.stringify(record));
-      }
+      const entity = await buildEntity(record);
 
-      msg.ack();
+      if (entity) {
+        await menash.send(config.rabbit.sendData, JSON.stringify(entity));
+
+        msg.ack();
+      } else {
+        // throw error
+      }
     },
     { noAck: false }
   );
 };
-export const sendRecordToMatch = async (record: any, dataSource: any, runUID: any) => {
-  await menash.send(config.rabbit.beforeMatchQName, {
+export const sendRecordToDiff = async (record: any, dataSource: any, runUID: any) => {
+  await menash.send(config.rabbit.sendData, {
     record: record,
     dataSource: dataSource,
     runUID: runUID,
   });
 };
 
-export default { connectRabbit, sendRecordToMatch };
+export default { connectRabbit, sendRecordToMatch: sendRecordToDiff };

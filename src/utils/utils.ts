@@ -1,3 +1,6 @@
+import { units } from '../config/entity.config';
+import { entity } from '../types/entityType';
+
 export const validator = () => {
   return {
     phone: /^\d{1,2}-?\d{6,7}$|^\*\d{3}$|^\d{4,5}$/,
@@ -20,15 +23,15 @@ export const validator = () => {
   };
 };
 
-export const setPhone = (obj: any): string[] | null => {
-  return validator().phone.test(`${obj.areaCode}-${obj.areaCode}`)
-    ? [`${obj.areaCode}-${obj.areaCode}`]
+export const setPhone = (obj: any): string | null => {
+  return validator().phone.test(`${obj.areaCode}-${obj.phone}`)
+    ? `${obj.areaCode}-${obj.phone}`
     : null;
 };
 
-export const setMobilePhone = (areaCodeMobile: any): string[] | null => {
-  return validator().mobilePhone.test(`${areaCodeMobile}-${areaCodeMobile}`)
-    ? [`${areaCodeMobile}-${areaCodeMobile}`]
+export const setMobilePhone = (obj: any): string | null => {
+  return validator().mobilePhone.test(`${obj.areaCodeMobile}-${obj.mobilePhone}`)
+    ? `${obj.areaCodeMobile}-${obj.mobilePhone}`
     : null;
 };
 
@@ -37,3 +40,19 @@ export const setDischargeDay = (dischargeDay: any) => {
   const userTimezoneOffset = date ? date.getTimezoneOffset() * 60000 : null;
   return date ? new Date(date.getTime() - (userTimezoneOffset as number)) : null;
 };
+
+export const getPrimeSource = (currUnit: string | undefined): string => {
+  if (!currUnit) return '';
+
+  let unit: string = '';
+
+  Object.keys(units).forEach((u) => {
+    if (units[u].includes(currUnit)) unit = u;
+  });
+
+  return unit;
+};
+
+// enum fn
+export const sortSource = (curr: any, _: any) => (curr.entityType === 'Solider' ? 1 : -1);
+export const sortAka = (curr: entity, _: entity) => (curr.personalNumber?.length === 9 ? -1 : 1);

@@ -1,44 +1,46 @@
 import { initEntity } from './initEntity';
 import { entity } from '../types/entityType';
-import { akaStr, dataSourceHierarchy, primeStr } from '../config/entity.config';
+import { akaStr, dataSourceHierarchy } from '../config/entity.config';
+import { getPrimeSource, sortAka, sortSource } from '../utils/utils';
+import { mergedObj } from '../types/mergedObjType';
 
-const source = () => {
-  return (curr: any, _: any) => {
-    // enum fn
-    return curr.entityType === 'Solider' ? -1 : 1;
-  };
-};
+const getRecordsByHierarchy = (data: mergedObj) => {
+  const primeUnitStr = getPrimeSource(data.aka[0].akaUnit || data.city[0].akaUnit);
 
-export const buildEntity = async (data: any) => {
-  let dataArr: any = [];
+  const allRecords: any = [];
 
-  let aka: any = [];
-  let prime: any;
+  let akaRecords: entity[] = [];
+  let primeRecords: entity[] = [];
 
   dataSourceHierarchy.forEach((d) => {
     if (data[d]) {
-      if (d === akaStr) aka = data[d];
-      else if (d === primeStr) prime = data[d];
-      else data[d].sort(source).forEach((record: any) => dataArr.push(record));
+      if (d === akaStr) akaRecords = data[d];
+      else if (d === primeUnitStr) primeRecords = data[d];
+      else data[d].sort(sortSource).forEach((record: any) => allRecords.push(record));
     }
   });
 
-  // sort aka
-  aka.sort((curr: any, _: any) => {
-    // enum fn
-    return `${curr.personalNumber}`.length === 9 ? 1 : -1;
-  });
+  akaRecords.sort(sortAka);
 
-  // sort prime
-  prime.sort(source);
+  primeRecords.sort(sortSource);
 
-  dataArr = [...aka, ...prime, ...dataArr];
+  return [...akaRecords, ...primeRecords, ...allRecords];
+};
 
-  if (dataArr.length > 0) {
-    let entity: Partial<entity> = await initEntity(dataArr[0] as entity);
+const setEntity = (allRecords: entity[]) => {
+  let entity: entity = {};
 
-    for (let i = 1; i < dataArr.length; i++) {
-      entity = await initEntity(dataArr[i] as entity, entity as entity);
-    }
+  for (let i = 0; i < allRecords.length; i++) {
+    entity = initEntity(allRecords[i], entity);
   }
+
+  return entity;
+};
+
+export const buildEntity = async (data: mergedObj) => {
+  let allRecords: entity[] = getRecordsByHierarchy(data);
+
+  if (allRecords.length > 0) return setEntity(allRecords);
+
+  return null;
 };

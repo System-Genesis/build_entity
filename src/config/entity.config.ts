@@ -2,8 +2,23 @@ import { entity } from '../types/entityType';
 import { setDischargeDay, setMobilePhone, setPhone } from '../utils/utils';
 import { validator } from '../utils/utils';
 
-export const dataSourceHierarchy: string[] = ['a', 'b'];
-export const primeStr = 'getPrime';
+export const units = {
+  aka: ['gondor', 'mordor', 'wallmart', 'valhalla'],
+  es: ['es1', 'es2', 'es3', 'es4', 'es5', 'es6'],
+  ad: ['ads1', 'ads2', 'ads3', 'ads4', 'ads5', 'ads6'],
+  city: ['city1', 'city2', 'city3', 'city4', 'city5', 'city6'],
+  sf: ['sf1', 'sf2', 'sf3', 'sf4', 'sf5', 'sf6'],
+};
+
+export const dataSourceHierarchy: string[] = [
+  'aka',
+  'eightSocks',
+  'adS',
+  'adNn',
+  'city',
+  'sf',
+  'mm',
+];
 export const akaStr = 'aka';
 
 export const entityValidation = {
@@ -20,16 +35,28 @@ export const entityValidation = {
   address: (ds: entity) => ds.address,
   clearance: (ds: entity) => ds.clearance,
   pictures: (ds: entity) => ds.pictures,
-  //   profile: (ds: entity) => ds.pictures?.profile,
-  //   url: (ds: entity) => ds.pictures?.profile?.url,
-  //   meta: (ds: entity) => ds.pictures?.profile?.meta,
   sex: (ds: entity) => ds.sex,
   birthDate: (ds: entity) => ds.birthDate,
   createdAt: (ds: entity) => ds.createdAt,
   updatedAt: (ds: entity) => ds.updatedAt,
-  phone: (ds: entity) => (ds.phone = setPhone(ds) as string[]),
+  phone: (ds: entity) => {
+    const phone = setPhone(ds);
+
+    if (phone) return !(ds.phone instanceof Array) ? (ds.phone = [phone]) : ds.phone.push(phone);
+
+    return null;
+  },
   identityCard: (ds: entity) => validator().identityCard(ds.identityCard),
-  mobilePhone: (ds: entity) => (ds.mobilePhone = setMobilePhone(ds.mobilePhone) as string[]),
+  mobilePhone: (ds: entity) => {
+    const mobilePhone = setMobilePhone(ds);
+
+    if (mobilePhone)
+      return !(ds.mobilePhone instanceof Array)
+        ? (ds.mobilePhone = [mobilePhone])
+        : ds.mobilePhone.push(mobilePhone);
+
+    return null;
+  },
   dischargeDay: (ds: entity) => (ds.dischargeDay = setDischargeDay(ds.dischargeDay) as Date),
 };
 
