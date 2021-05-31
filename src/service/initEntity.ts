@@ -1,7 +1,11 @@
 import { entityValidation } from '../config/entity.config';
+import { log } from '../logger/logger';
 import { entity } from '../types/entityType';
 
 export const initEntity = (record: entity, entityObj: entity = {}) => {
+  log('get field from ', record);
+  log('set field to ', entityObj);
+
   validateFields(record).forEach((name) => setSpecificField(entityObj, record, name));
 
   return entityObj;
@@ -15,6 +19,7 @@ export function validateFields(dataSourceObj: entity): string[] {
       validatedFields.push(validate);
   });
 
+  log('field to copy ', validatedFields);
   return validatedFields;
 }
 
