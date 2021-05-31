@@ -6,7 +6,8 @@ import { mergedObj } from '../types/mergedObjType';
 import { log } from '../logger/logger';
 
 const getRecordsByHierarchy = (data: mergedObj) => {
-  const primeUnitStr = getPrimeSource(data.aka[0].akaUnit || data.city[0].akaUnit);
+  const unit = data.aka ? data.aka[0].record.akaUnit : data.city ? data.city[0].record.akaUnit : '';
+  const primeUnitStr = getPrimeSource(unit);
 
   const allRecords: any = [];
 
@@ -15,9 +16,13 @@ const getRecordsByHierarchy = (data: mergedObj) => {
 
   dataSourceHierarchy.forEach((d) => {
     if (data[d]) {
-      if (d === akaStr) akaRecords = data[d];
-      else if (d === primeUnitStr) primeRecords = data[d];
-      else data[d].sort(sortSource).forEach((record: any) => allRecords.push(record));
+      if (d === akaStr) akaRecords = data[d]?.map(({ record }) => record) || [];
+      else if (d === primeUnitStr) primeRecords = data[d].map(({ record }) => record);
+      else
+        data[d]
+          .sort(sortSource)
+          .map(({ record }) => record)
+          .forEach((record: entity) => allRecords.push(record));
     }
   });
 

@@ -2,7 +2,7 @@ import { entity } from '../types/entityType';
 import { setDischargeDay, setMobilePhone, setPhone } from '../utils/utils';
 import { validator } from '../utils/utils';
 
-export const dataSourceHierarchy: string[] = ['aka', 'eightSocks', 'adS', 'adNn', 'city', 'sf'];
+export const dataSourceHierarchy: string[] = ['aka', 'eightSocks', 'adS', 'adNn', 'sf', 'city'];
 export const akaStr = 'aka';
 
 export const entityValidation = {

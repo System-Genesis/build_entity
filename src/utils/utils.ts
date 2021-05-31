@@ -1,5 +1,6 @@
-import { units } from '../config/entity.config';
+import { units } from '../units/units';
 import { entity } from '../types/entityType';
+import { log } from '../logger/logger';
 
 export const validator = () => {
   return {
@@ -38,7 +39,8 @@ export const setMobilePhone = (obj: any): string | null => {
 export const setDischargeDay = (dischargeDay: any) => {
   const date = dischargeDay ? new Date(dischargeDay) : null;
   const userTimezoneOffset = date ? date.getTimezoneOffset() * 60000 : null;
-  return date ? new Date(date.getTime() - (userTimezoneOffset as number)) : null;
+  const res = date ? new Date(date.getTime() - (userTimezoneOffset as number)) : null;
+  return res?.toString() !== 'Invalid Date' ? res : null;
 };
 
 export const getPrimeSource = (currUnit: string | undefined): string => {
@@ -50,9 +52,10 @@ export const getPrimeSource = (currUnit: string | undefined): string => {
     if (units[u].includes(currUnit)) unit = u;
   });
 
+  log('prime source = ' + unit);
   return unit;
 };
 
 // enum fn
-export const sortSource = (curr: any, _: any) => (curr.entityType === 'Solider' ? 1 : -1);
+export const sortSource = (curr: entity, _: entity) => (curr.entityType === 'Solider' ? 1 : -1);
 export const sortAka = (curr: entity, _: entity) => (curr.personalNumber?.length === 9 ? -1 : 1);

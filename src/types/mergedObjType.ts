@@ -1,12 +1,12 @@
 import { entity } from './entityType';
 
 export type mergedObj = {
-  aka: entity[];
-  eightSocks: entity[];
-  sf: entity[];
-  city: entity[];
-  adNn: entity[];
-  adS: entity[];
+  aka?: { record: entity }[];
+  eightSocks?: { record: entity }[];
+  sf?: { record: entity }[];
+  city?: { record: entity }[];
+  adNn?: { record: entity }[];
+  adS?: { record: entity }[];
 
   identifiers: {
     personalNumber: string;
