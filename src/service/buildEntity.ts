@@ -36,8 +36,13 @@ const getRecordsByHierarchy = (data: mergedObj) => {
 const setEntity = (allRecords: entity[]) => {
   let entity: entity = {};
 
-  for (let i = 0; i < allRecords.length; i++) {
-    entity = initEntity(allRecords[i], entity);
+  if (process.env.VALIDATE) {
+    allRecords.forEach((record) => (entity = initEntity(record, entity)));
+  } else {
+    allRecords.reverse().forEach((record) => Object.assign(entity, record));
+
+    // delete undefined fields
+    Object.keys(entity).forEach((field) => (!entity[field] ? delete entity[field] : null));
   }
 
   log('result entity: ', entity);
