@@ -1,15 +1,12 @@
 import chai, { assert } from 'chai';
-import chaiHttp from 'chai-http';
-import { buildEntity } from './../src/service/buildEntity';
+import { createEntity } from './../src/service/buildEntity';
 import { mergedObj } from '../src/types/mergedObjType';
 
 chai.should();
 
-chai.use(chaiHttp);
-
 describe('all', () => {
   describe('hierarchy', () => {
-    it('aka vs other', async () => {
+    it('Should prefer aka fields vs other ds fields', async () => {
       const data: mergedObj = {
         aka: [{ record: { firstName: 'd' } }],
         sf: [{ record: { firstName: 'c' } }],
@@ -21,12 +18,12 @@ describe('all', () => {
         },
       };
 
-      const res = (await buildEntity(data as unknown as mergedObj)) || { firstName: 'error' };
+      const res = (await createEntity(data as unknown as mergedObj)) || { firstName: 'error' };
 
       assert.equal(res.firstName, 'd');
     });
 
-    it('aka vs prime', async () => {
+    it('Should prefer aka fields vs prime ds fields', async () => {
       const data: mergedObj = {
         aka: [{ record: { firstName: 'd', akaUnit: 'sf1' } }],
         sf: [{ record: { firstName: 'c' } }],
@@ -38,12 +35,12 @@ describe('all', () => {
         },
       };
 
-      const res = (await buildEntity(data as unknown as mergedObj)) || { firstName: 'error' };
+      const res = (await createEntity(data as unknown as mergedObj)) || { firstName: 'error' };
 
       assert.equal(res.firstName, 'd');
     });
 
-    it('prime vs other', async () => {
+    it('Should prefer prime fields vs other ds fields', async () => {
       const data: mergedObj = {
         aka: [{ record: { akaUnit: 'sf1' } }],
         sf: [{ record: { firstName: 'd' } }],
@@ -56,14 +53,14 @@ describe('all', () => {
         },
       };
 
-      const res = (await buildEntity(data as unknown as mergedObj)) || { firstName: 'error' };
+      const res = (await createEntity(data as unknown as mergedObj)) || { firstName: 'error' };
 
       assert.equal(res.firstName, 'd');
     });
   });
 
   describe('logic', () => {
-    it('fields from other ds', async () => {
+    it('Should add fields from other ds', async () => {
       const data: mergedObj = {
         aka: [{ record: { job: 'good job', akaUnit: 'sf1' } }],
         sf: [{ record: { firstName: 'd' } }],
@@ -77,14 +74,14 @@ describe('all', () => {
         },
       };
 
-      const res = (await buildEntity(data as unknown as mergedObj)) || { status: 'error' };
+      const res = (await createEntity(data as unknown as mergedObj)) || { status: 'error' };
 
       assert.equal(res.status, 'good');
       assert.equal(res.job, 'good job');
       assert.equal(res.mail, 'mail');
     });
 
-    it('ignore undefined fields', async () => {
+    it('Should ignore undefined fields', async () => {
       const data: mergedObj = {
         aka: [{ record: { akaUnit: 'sf1' } }],
         sf: [{ record: { firstName: 'd' } }],
@@ -97,12 +94,12 @@ describe('all', () => {
         },
       };
 
-      const res = (await buildEntity(data as unknown as mergedObj)) || { firstName: 'error' };
+      const res = (await createEntity(data as unknown as mergedObj)) || { firstName: 'error' };
 
       assert.isFalse(Object.keys(res).includes('lastName'));
     });
 
-    it('akaSoldier vs akaOther', async () => {
+    it('Should prefer akaSoldier before akaOther', async () => {
       const data: mergedObj = {
         aka: [
           { record: { firstName: 'lose', personalNumber: '156' } },
@@ -116,7 +113,7 @@ describe('all', () => {
         },
       };
 
-      const res = (await buildEntity(data as unknown as mergedObj)) || { firstName: 'error' };
+      const res = (await createEntity(data as unknown as mergedObj)) || { firstName: 'error' };
 
       assert.equal(res.firstName, 'win');
       assert.equal(res.lastName, 'last');

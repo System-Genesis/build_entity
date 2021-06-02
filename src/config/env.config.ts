@@ -13,4 +13,5 @@ export default {
       factor: env.get('RABBIT_RETRY_FACTOR').default(1.8).asFloatPositive(),
     },
   },
+  ds_h: env.get('DS_H').required().asArray(),
 };

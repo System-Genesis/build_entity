@@ -70,23 +70,5 @@ const messageLog = {
     INF_CONNECT_REDIS: 'Redis connect to service',
     INF_SET_TOKEN: 'Success to set access token in redis',
     INF_CLOSED_REDIS: 'The connection to Redis is closed',
-    INF_ROOT_EXSIST: 'The root hierarchy %s already exist in Kartoffel',
-    INF_ADD_ROOT: 'Success to add the root hierarchy %s to Kartoffel',
-    INF_ADD_PERSON_TO_KARTOFFEL:
-      'The person with the identifier: %s from %s successfully insert to Kartoffel',
-    INF_ADD_DOMAIN_USER:
-      'Add the domain user "%s" to the person with the idetifier: %s from %s successfully.',
-    INF_ADD_HIERARCHY: 'success to add the hierarchy "%s" to Kartoffel',
-    INF_SAVE_NEW_DATA_FILE: 'The %s from %s successfully saved',
-    INF_MOVE_FILE_TO_ARCHIVE: '%s successfully moved to the archive',
-    INF_UPDATE_DIRECT_GROUP_TO_PERSON:
-      'The directGroup of the person with the identifier: %s from %s update successfully. %s',
-    INF_UPDATE_PERSON_IN_KARTOFFEL:
-      'The person with the identifier: %s from %s update successfully. %s',
-    INF_DELETE_DOMAIN_USER:
-      'The domain user %s from %s successfully removed from the person with identifier: %s',
-    INF_TRANSFER_DOMAIN_USER:
-      'The domain user: %s successfully transfer FROM person with identifier: %s TO the person with identifier: %s from %s',
-    INF_CONSUME_FROM_KAFKA: 'Recive message successfuly from kafka. topic: %s, message: %s',
   },
 };

@@ -1,10 +1,16 @@
-import { initEntity } from './initEntity';
+import { initEntity as setEntity } from './initEntity';
 import { entity } from '../types/entityType';
 import { akaStr, dataSourceHierarchy } from '../utils/entity.utils';
 import { getPrimeSource, sortAka, sortSource } from '../utils/entity.utils';
 import { mergedObj } from '../types/mergedObjType';
 import { logInfo } from '../logger/logger';
 
+/**
+ * Create array of records ordered by hierarchy of dataSource
+ *
+ * @param data original obj from queue
+ * @returns Array of entities ordered by hierarchy
+ */
 export const getRecordsByHierarchy = (data: mergedObj): entity[] => {
   const primeUnitStr = getPrimeSource(data.aka || data.city);
 
@@ -31,11 +37,17 @@ export const getRecordsByHierarchy = (data: mergedObj): entity[] => {
   return [...akaRecords, ...primeRecords, ...allRecords];
 };
 
-const setEntity = (allRecords: entity[]) => {
+/**
+ * Create entity for krtfl from all records
+ *
+ * @param allRecords records from all given dataSources
+ * @returns Entity ready for krtfl
+ */
+const buildEntity = (allRecords: entity[]): entity => {
   let entity: entity = {};
 
   if (process.env.VALIDATE) {
-    allRecords.forEach((record) => (entity = initEntity(record, entity)));
+    allRecords.forEach((record) => (entity = setEntity(record, entity)));
   } else {
     allRecords.reverse().forEach((record) => Object.assign(entity, record));
 
@@ -47,7 +59,13 @@ const setEntity = (allRecords: entity[]) => {
   return entity;
 };
 
-export const buildEntity = async (data: mergedObj) => {
+/**
+ * Main function to build entity for krtfl
+ *
+ * @param data object from queue in type mergedObj
+ * @returns Entity ready for krtfl or null if didn't get records in data
+ */
+export const createEntity = async (data: mergedObj) => {
   let allRecords: entity[] = getRecordsByHierarchy(data);
 
   if (allRecords.length === 0) {
@@ -55,5 +73,5 @@ export const buildEntity = async (data: mergedObj) => {
     return null;
   }
 
-  return setEntity(allRecords);
+  return buildEntity(allRecords);
 };

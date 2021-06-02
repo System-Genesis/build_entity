@@ -6,6 +6,12 @@ import { validator } from './validator.utils';
 export const dataSourceHierarchy: string[] = ['aka', 'eightSocks', 'adS', 'adNn', 'sf', 'city'];
 export const akaStr = dataSourceHierarchy[0];
 
+/**
+ * Found the dataSource according the entity unit
+ *
+ * @param currUnit unit for search in all units and get the prime dataSource
+ * @returns dataSource name
+ */
 export const getPrimeSource = (currUnit: { record: entity }[] | undefined): string => {
   if (!currUnit) return '';
 

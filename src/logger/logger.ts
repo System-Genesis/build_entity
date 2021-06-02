@@ -30,10 +30,10 @@ const logger = winston.createLogger({
   ],
 });
 
-export const logInfo = (str: string, any: any = '') => {
-  logger.info(`${str} ${JSON.stringify(Object.keys(any))}`);
+export const logInfo = (msg: string, any: any = '') => {
+  logger.info(`${msg} ${JSON.stringify(Object.keys(any))}`);
 };
 
-export const logError = (str: string, any: any = '') => {
-  logger.error(`${str} ${JSON.stringify(any)}`);
+export const logError = (msg: string, any: any = '') => {
+  logger.error(`${msg} ${JSON.stringify(any)}`);
 };

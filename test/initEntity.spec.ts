@@ -1,16 +1,13 @@
 import chai, { assert } from 'chai';
-import chaiHttp from 'chai-http';
 import { entity } from '../src/types/entityType';
 import { initEntity, setSpecificField, validateFields } from '../src/service/initEntity';
 import { getPrimeSource } from '../src/utils/entity.utils';
 
 chai.should();
 
-chai.use(chaiHttp);
-
 describe('init entity', () => {
   describe('validateFields', () => {
-    it('all pass validation', () => {
+    it('Should all pass validation', () => {
       const record: entity = {
         displayName: 'a',
         entityType: 'b',
@@ -21,7 +18,7 @@ describe('init entity', () => {
       assert.deepEqual(res, ['displayName', 'entityType', 'identityCard']);
     });
 
-    it('some validation fail', () => {
+    it('Some validation Should fail', () => {
       const record: entity = {
         displayName: 'a',
         entityType: 'b',
@@ -34,7 +31,7 @@ describe('init entity', () => {
   });
 
   describe('setSpecificField', () => {
-    it('ignore undefined fields', () => {
+    it('Should ignore undefined fields', () => {
       const record: entity = {
         displayName: 'a',
         lastName: undefined,
@@ -48,7 +45,7 @@ describe('init entity', () => {
       assert.notDeepEqual(record, entity);
     });
 
-    it('add fields', () => {
+    it('Should add fields', () => {
       const record: entity = {
         displayName: 'a',
         lastName: 'b',
@@ -63,7 +60,7 @@ describe('init entity', () => {
   });
 
   describe('initEntity', () => {
-    it('full init', () => {
+    it('Should fully init', () => {
       const record: entity = {
         displayName: 'a',
         lastName: 'b',
@@ -75,7 +72,7 @@ describe('init entity', () => {
       assert.deepEqual(record, res);
     });
 
-    it('initEntity not init fail validation field', () => {
+    it('Should not init fail validation field', () => {
       const record: entity = {
         displayName: 'ds',
         lastName: 'fhj',
@@ -87,7 +84,7 @@ describe('init entity', () => {
       assert.notDeepEqual(record, res);
     });
 
-    it('add fields', () => {
+    it('Should add fields', () => {
       const record: entity = {
         displayName: 'a',
         lastName: 'b',
@@ -103,7 +100,7 @@ describe('init entity', () => {
       assert.equal(res.lastName, 'b');
     });
 
-    it('not override existing field', () => {
+    it('Should not override existing field', () => {
       const record: entity = {
         displayName: 'a',
         lastName: 'b',
@@ -122,28 +119,28 @@ describe('init entity', () => {
   });
 
   describe('getPrimeSource', () => {
-    it('exist unit', () => {
+    it('Should find unit', () => {
       const unit = [{ record: { akaUnit: 'sf1' } }];
       const res = getPrimeSource(unit);
 
       assert.equal(res, 'sf');
     });
 
-    it('not exist unit', () => {
+    it('Should not find unit', () => {
       const unit = [{ record: { akaUnit: 'sf1s' } }];
       const res = getPrimeSource(unit);
 
       assert.notEqual(res, 'sf');
     });
 
-    it('not exist aka unit field', () => {
+    it('Should return "" because akaUnit dos not exits', () => {
       const unit = [{ record: {} }];
       const res = getPrimeSource(unit);
 
       assert.equal(res, '');
     });
 
-    it('source unit', () => {
+    it('Should not find source, aka does not a unit ', () => {
       const unit = [{ record: { akaUnit: 'aka' } }];
       const res = getPrimeSource(unit);
 

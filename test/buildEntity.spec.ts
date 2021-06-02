@@ -1,27 +1,11 @@
 import chai, { assert } from 'chai';
-import chaiHttp from 'chai-http';
 import { getRecordsByHierarchy } from '../src/service/buildEntity';
 
 chai.should();
 
-chai.use(chaiHttp);
-
-// aka?: { record: entity }[];
-// eightSocks?: { record: entity }[];
-// sf?: { record: entity }[];
-// city?: { record: entity }[];
-// adNn?: { record: entity }[];
-// adS?: { record: entity }[];
-
-// identifiers: {
-//   personalNumber: string;
-//   identityCard: string;
-//   goalUser: string;
-// };
-
 describe('Build entity', () => {
   describe('GetRecordsByHierarchy', () => {
-    it('Aka source first', () => {
+    it('Should prefer aka source first', () => {
       const res = getRecordsByHierarchy({
         aka: [{ record: { akaUnit: 'aka' } }],
         city: [{ record: { akaUnit: 'b' } }],
@@ -33,7 +17,7 @@ describe('Build entity', () => {
       assert.equal(res[0].akaUnit, 'aka');
     });
 
-    it('Prime source second', () => {
+    it('Should prefer prime source second', () => {
       const res = getRecordsByHierarchy({
         aka: [{ record: { akaUnit: 'sf1' } }],
         city: [{ record: { akaUnit: 'b' } }],
@@ -45,7 +29,7 @@ describe('Build entity', () => {
       assert.equal(res[1].akaUnit, 'sf');
     });
 
-    it('Order by hierarchy of source', () => {
+    it('Should Order by hierarchy of source', () => {
       const res = getRecordsByHierarchy({
         aka: [{ record: { akaUnit: 'sf1' } }],
         city: [{ record: { akaUnit: 'city' } }],

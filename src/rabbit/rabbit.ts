@@ -1,7 +1,7 @@
 import menash, { ConsumerMessage } from 'menashmq';
-import config from '../config/rabbit.config';
+import config from '../config/env.config';
 import { logInfo, logError } from '../logger/logger';
-import { buildEntity } from '../service/buildEntity';
+import { createEntity } from '../service/buildEntity';
 import { entity } from '../types/entityType';
 import { mergedObj } from '../types/mergedObjType';
 
@@ -18,13 +18,14 @@ export const connectRabbit = async () => {
   await menash.queue(config.rabbit.getData).activateConsumer(
     async (msg: ConsumerMessage) => {
       try {
-        let record = msg.getContent() as mergedObj;
-        logInfo(`Get from queue => `, record);
+        const mergedObj = msg.getContent() as mergedObj;
+        logInfo(`Got from queue => `, mergedObj);
 
-        const entity = await buildEntity(record);
-        logInfo('Entity builded');
+        const entity = await createEntity(mergedObj);
 
         if (entity) {
+          logInfo('Entity builded');
+
           await sendRecordToDiff(entity);
           logInfo('Send to dif queue');
 
@@ -35,6 +36,7 @@ export const connectRabbit = async () => {
       } catch (error) {
         logError(error);
 
+        // handle error reject or else ...
         msg.ack();
       }
     },
