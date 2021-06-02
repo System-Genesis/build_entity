@@ -25,9 +25,14 @@ export function validateFields(record: entity): string[] {
 }
 
 export function setSpecificField(entity: entity, record: entity, fieldName: string) {
-  if (!entity[fieldName] && record[fieldName]) {
-    entity[fieldName] = Array.isArray(entity[fieldName])
-      ? entity[fieldName].push(...record[fieldName])
-      : record[fieldName];
-  }
+  if (!entity[fieldName] && record[fieldName]) entity[fieldName] = record[fieldName];
 }
+
+// if add to array and not replace
+// export function setSpecificField(entity: entity, record: entity, fieldName: string) {
+//   if (!entity[fieldName] && record[fieldName]) {
+//     entity[fieldName] = Array.isArray(entity[fieldName])
+//       ? entity[fieldName].push(...record[fieldName])
+//       : record[fieldName];
+//   }
+// }
