@@ -1,9 +1,27 @@
+import { logInfo } from '../logger/logger';
 import { entity } from '../types/entityType';
-import { setDischargeDay, setMobilePhone, setPhone } from '../utils/utils';
-import { validator } from '../utils/utils';
+import { units } from '../units/units';
+import { validator } from './validator.utils';
 
 export const dataSourceHierarchy: string[] = ['aka', 'eightSocks', 'adS', 'adNn', 'sf', 'city'];
-export const akaStr = 'aka';
+export const akaStr = dataSourceHierarchy[0];
+
+export const getPrimeSource = (currUnit: { record: entity }[] | undefined): string => {
+  if (!currUnit) return '';
+
+  let unit: string = '';
+
+  Object.keys(units).forEach((u) => {
+    if (units[u].includes(currUnit[0].record.akaUnit)) unit = u;
+  });
+
+  logInfo('Prime source = ' + unit);
+  return unit;
+};
+
+// enum fn
+export const sortSource = (curr: entity, _: entity) => (curr.entityType === 'Solider' ? 1 : -1);
+export const sortAka = (curr: entity, _: entity) => (curr.personalNumber?.length === 9 ? -1 : 1);
 
 export const entityValidation = {
   displayName: (ds: entity) => ds.displayName,
@@ -24,22 +42,11 @@ export const entityValidation = {
   createdAt: (ds: entity) => ds.createdAt,
   updatedAt: (ds: entity) => ds.updatedAt,
   identityCard: (ds: entity) => validator().identityCard(ds.identityCard),
-  dischargeDay: (ds: entity) => (ds.dischargeDay = setDischargeDay(ds.dischargeDay) as Date),
+  dischargeDay: (ds: entity) => ds.dischargeDay,
   phone: (ds: entity) => {
-    const phone = setPhone(ds);
-
-    if (phone) return !(ds.phone instanceof Array) ? (ds.phone = [phone]) : ds.phone.push(phone);
+    if (ds.phone) return !Array.isArray(ds.phone) ? (ds.phone = [ds.phone]) : ds.phone;
 
     return null;
   },
-  mobilePhone: (ds: entity) => {
-    const mobilePhone = setMobilePhone(ds);
-
-    if (mobilePhone)
-      return !(ds.mobilePhone instanceof Array)
-        ? (ds.mobilePhone = [mobilePhone])
-        : ds.mobilePhone.push(mobilePhone);
-
-    return null;
-  },
+  mobilePhone: (ds: entity) => ds.mobilePhone,
 };

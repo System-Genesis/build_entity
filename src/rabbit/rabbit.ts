@@ -1,35 +1,39 @@
 import menash, { ConsumerMessage } from 'menashmq';
-import config from './rabbit.config';
+import config from '../config/rabbit.config';
+import { logInfo, logError } from '../logger/logger';
 import { buildEntity } from '../service/buildEntity';
-import { data } from './../config/fake';
+import { entity } from '../types/entityType';
+import { mergedObj } from '../types/mergedObjType';
 
 export const connectRabbit = async () => {
-  console.log('Connecting to Rabbit...');
+  logInfo('Connecting to Rabbit...');
 
   await menash.connect(config.rabbit.uri, config.rabbit.retryOptions);
 
   await menash.declareQueue(config.rabbit.getData);
   await menash.declareQueue(config.rabbit.sendData);
 
-  console.log('Rabbit connected');
+  logInfo('Rabbit connected');
 
   await menash.queue(config.rabbit.getData).activateConsumer(
     async (msg: ConsumerMessage) => {
       try {
-        let record: any = msg.getContent();
+        let record = msg.getContent() as mergedObj;
+        logInfo(`Get from queue => `, record);
 
         const entity = await buildEntity(record);
+        logInfo('Entity builded');
 
         if (entity) {
-          console.log('🚀 ~ file: rabbit.ts ~ line 24 ~ entity', entity);
-          await menash.send(config.rabbit.sendData, JSON.stringify(entity));
+          await sendRecordToDiff(entity);
+          logInfo('Send to dif queue');
 
           msg.ack();
         } else {
           throw 'Entity not builded';
         }
       } catch (error) {
-        console.log(error);
+        logError(error);
 
         msg.ack();
       }
@@ -38,13 +42,11 @@ export const connectRabbit = async () => {
   );
 };
 
-export const sendRecordToDiff = async () => {
+export const sendRecordToDiff = async (data: entity) => {
   try {
-    await connectRabbit();
-
     await menash.send(config.rabbit.getData, data);
   } catch (error) {
-    console.log(`${error}`.split('at C')[0]);
+    logInfo(`${error}`.split('at C')[0]);
   }
 };
 

@@ -1,28 +1,33 @@
-import { entityValidation } from '../config/entity.config';
-import { log } from '../logger/logger';
+import { entityValidation } from '../utils/entity.utils';
+import { logInfo } from '../logger/logger';
 import { entity } from '../types/entityType';
 
-export const initEntity = (record: entity, entityObj: entity = {}) => {
-  log('get field from ', record);
-  log('set field to ', entityObj);
+export const initEntity = (record: entity, entity: entity = {}) => {
+  logInfo('Optional fields to copy => ', record);
+  logInfo('Copy fields to => ', entity);
 
-  validateFields(record).forEach((name) => setSpecificField(entityObj, record, name));
+  validateFields(record).forEach((fieldName) => setSpecificField(entity, record, fieldName));
 
-  return entityObj;
+  return entity;
 };
 
-export function validateFields(dataSourceObj: entity): string[] {
+export function validateFields(record: entity): string[] {
   const validatedFields: string[] = [];
 
   Object.keys(entityValidation).forEach((validate) => {
-    if (dataSourceObj[validate] && entityValidation[validate](dataSourceObj))
+    if (record[validate] && entityValidation[validate](record)) {
       validatedFields.push(validate);
+    }
   });
 
-  log('field to copy ', validatedFields);
+  logInfo(`Fields to copy => ${validatedFields}`);
   return validatedFields;
 }
 
-export function setSpecificField(entity: entity, newObj: entity, fieldName: string) {
-  if (!entity[fieldName] && newObj[fieldName]) entity[fieldName] = newObj[fieldName];
+export function setSpecificField(entity: entity, record: entity, fieldName: string) {
+  if (!entity[fieldName] && record[fieldName]) {
+    entity[fieldName] = Array.isArray(entity[fieldName])
+      ? entity[fieldName].push(...record[fieldName])
+      : record[fieldName];
+  }
 }

@@ -2,6 +2,7 @@ import chai, { assert } from 'chai';
 import chaiHttp from 'chai-http';
 import { entity } from '../src/types/entityType';
 import { initEntity, setSpecificField, validateFields } from '../src/service/initEntity';
+import { getPrimeSource } from '../src/utils/entity.utils';
 
 chai.should();
 
@@ -117,6 +118,36 @@ describe('init entity', () => {
 
       assert.equal(res.displayName, 'c');
       assert.equal(res.lastName, 'd');
+    });
+  });
+
+  describe('getPrimeSource', () => {
+    it('exist unit', () => {
+      const unit = [{ record: { akaUnit: 'sf1' } }];
+      const res = getPrimeSource(unit);
+
+      assert.equal(res, 'sf');
+    });
+
+    it('not exist unit', () => {
+      const unit = [{ record: { akaUnit: 'sf1s' } }];
+      const res = getPrimeSource(unit);
+
+      assert.notEqual(res, 'sf');
+    });
+
+    it('not exist aka unit field', () => {
+      const unit = [{ record: {} }];
+      const res = getPrimeSource(unit);
+
+      assert.equal(res, '');
+    });
+
+    it('source unit', () => {
+      const unit = [{ record: { akaUnit: 'aka' } }];
+      const res = getPrimeSource(unit);
+
+      assert.notEqual(res, 'aka');
     });
   });
 });

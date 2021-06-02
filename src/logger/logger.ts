@@ -22,6 +22,7 @@ const logger = winston.createLogger({
     format.json()
   ),
   transports: [
+    // new winston.transports.Console(),
     new winston.transports.File({
       filename: path.join(__dirname, `../../log/${date()}-logger.log`),
       maxsize: 50000,
@@ -29,6 +30,10 @@ const logger = winston.createLogger({
   ],
 });
 
-export const log = (str: string, any: any = '') => {
-  logger.log('error', `${str} =>`, any);
+export const logInfo = (str: string, any: any = '') => {
+  logger.info(`${str} ${JSON.stringify(Object.keys(any))}`);
+};
+
+export const logError = (str: string, any: any = '') => {
+  logger.error(`${str} ${JSON.stringify(any)}`);
 };

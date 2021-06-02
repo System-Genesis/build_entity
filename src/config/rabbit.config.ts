@@ -1,4 +1,4 @@
-import '../config/dotenv';
+import './dotenv';
 
 import * as env from 'env-var';
 
