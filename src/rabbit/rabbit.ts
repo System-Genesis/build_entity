@@ -46,7 +46,7 @@ export const connectRabbit = async () => {
 
 export const sendRecordToDiff = async (data: entity) => {
   try {
-    await menash.send(config.rabbit.getData, data);
+    await menash.send(config.rabbit.sendData, data);
   } catch (error) {
     logInfo(`${error}`.split('at C')[0]);
   }

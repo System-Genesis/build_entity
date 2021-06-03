@@ -1,6 +1,7 @@
 import { entityValidation } from '../utils/entity.utils';
 import { logInfo } from '../logger/logger';
 import { entity } from '../types/entityType';
+import { record } from '../types/recordType';
 
 /**
  * Add fields to entity from record
@@ -9,12 +10,14 @@ import { entity } from '../types/entityType';
  * @param entity entity that builded before and add new fields
  * @returns entity with the new fields
  */
-export const initEntity = (record: entity, entity: entity = {}) => {
-  logInfo('Optional fields to copy => ', record);
-  logInfo('Copy fields to => ', entity);
+export const initEntity = (record: record, entity: entity = {}) => {
+  logInfo(`Start with Record from ${record.ds} => `, record);
+  // logInfo('Copy fields to => ', entity);
 
   validateFields(record).forEach((fieldName) => setSpecificField(entity, record, fieldName));
 
+  logInfo(`End with Record from ${record.ds}`);
+  logInfo(`---------------------------------`);
   return entity;
 };
 
@@ -24,7 +27,7 @@ export const initEntity = (record: entity, entity: entity = {}) => {
  * @param record record from dataSource
  * @returns array of fields name that pass the validation
  */
-export function validateFields(record: entity): string[] {
+export function validateFields(record: record): string[] {
   const validatedFields: string[] = [];
 
   Object.keys(entityValidation).forEach((eliValidatorerationer) => {
@@ -33,7 +36,7 @@ export function validateFields(record: entity): string[] {
     }
   });
 
-  logInfo(`Fields to copy => ${validatedFields}`);
+  // logInfo(`Fields to copy => ${validatedFields}`);
   return validatedFields;
 }
 
@@ -44,14 +47,18 @@ export function validateFields(record: entity): string[] {
  * @param record source to get value from
  * @param fieldName name of filed to get & insert the value
  */
-export function setSpecificField(entity: entity, record: entity, fieldName: string) {
-  if (!entity[fieldName] && record[fieldName]) entity[fieldName] = record[fieldName];
+export function setSpecificField(entity: entity, record: record, fieldName: string) {
+  if (!entity[fieldName] && record[fieldName]) {
+    logInfo(`Set ${fieldName} = ${record[fieldName]}; from ${record.ds}`);
+
+    entity[fieldName] = record[fieldName];
+  }
 }
 
 //
 // if add to array and not replace
 //
-// export function setSpecificField(entity: entity, record: entity, fieldName: string) {
+// export function setSpecificField(entity: entity, record: record, fieldName: string) {
 //   if (!entity[fieldName] && record[fieldName]) {
 //     entity[fieldName] = Array.isArray(entity[fieldName])
 //       ? entity[fieldName].push(...record[fieldName])

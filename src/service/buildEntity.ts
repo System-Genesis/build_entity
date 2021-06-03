@@ -4,33 +4,28 @@ import { akaStr, dataSourceHierarchy } from '../utils/entity.utils';
 import { getPrimeSource, sortAka, sortSource } from '../utils/entity.utils';
 import { mergedObj } from '../types/mergedObjType';
 import { logInfo } from '../logger/logger';
+import { record } from '../types/recordType';
 
 /**
  * Create array of records ordered by hierarchy of dataSource
  *
  * @param data original obj from queue
- * @returns Array of entities ordered by hierarchy
+ * @returns Array of records ordered by hierarchy
  */
-export const getRecordsByHierarchy = (data: mergedObj): entity[] => {
+export const getRecordsByHierarchy = (data: mergedObj): record[] => {
   const primeUnitStr = getPrimeSource(data.aka || data.city);
 
   const allRecords: any = [];
-
   let akaRecords: entity[] = [];
   let primeRecords: entity[] = [];
 
   dataSourceHierarchy.forEach((d) => {
     if (data[d]) {
-      if (d === akaStr) {
-        akaRecords = data[d]?.map(({ record }) => record).sort(sortAka) || [];
-      } else if (d === primeUnitStr) {
-        primeRecords = data[d]?.map(({ record }) => record).sort(sortSource) || [];
-      } else {
-        data[d]
-          .sort(sortSource)
-          .map(({ record }) => record)
-          .forEach((record: entity) => allRecords.push(record));
-      }
+      const records = data[d]?.map(mapToDSRecords(d)).sort(sortSource);
+
+      if (d === akaStr) akaRecords = records.sort(sortAka);
+      else if (d === primeUnitStr) primeRecords = records;
+      else records.forEach((record: entity) => allRecords.push(record));
     }
   });
 
@@ -43,7 +38,7 @@ export const getRecordsByHierarchy = (data: mergedObj): entity[] => {
  * @param allRecords records from all given dataSources
  * @returns Entity ready for krtfl
  */
-const buildEntity = (allRecords: entity[]): entity => {
+const buildEntity = (allRecords: record[]): entity => {
   let entity: entity = {};
 
   if (process.env.VALIDATE) {
@@ -66,7 +61,7 @@ const buildEntity = (allRecords: entity[]): entity => {
  * @returns Entity ready for krtfl or null if didn't get records in data
  */
 export const createEntity = async (data: mergedObj) => {
-  let allRecords: entity[] = getRecordsByHierarchy(data);
+  let allRecords: record[] = getRecordsByHierarchy(data);
 
   if (allRecords.length === 0) {
     logInfo(`Didn't get any record`);
@@ -75,3 +70,10 @@ export const createEntity = async (data: mergedObj) => {
 
   return buildEntity(allRecords);
 };
+
+function mapToDSRecords(d: string): any {
+  return ({ record }) => {
+    record.ds = d;
+    return record;
+  };
+}

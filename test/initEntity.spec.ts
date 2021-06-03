@@ -2,16 +2,18 @@ import chai, { assert } from 'chai';
 import { entity } from '../src/types/entityType';
 import { initEntity, setSpecificField, validateFields } from '../src/service/initEntity';
 import { getPrimeSource } from '../src/utils/entity.utils';
+import { record } from './../src/types/recordType';
 
 chai.should();
 
 describe('init entity', () => {
   describe('validateFields', () => {
     it('Should all pass validation', () => {
-      const record: entity = {
+      const record: record = {
         displayName: 'a',
         entityType: 'b',
         identityCard: '8112005',
+        ds: 'test',
       };
 
       const res = validateFields(record);
@@ -19,10 +21,11 @@ describe('init entity', () => {
     });
 
     it('Some validation Should fail', () => {
-      const record: entity = {
+      const record: record = {
         displayName: 'a',
         entityType: 'b',
         identityCard: '800',
+        ds: 'test',
       };
 
       const res = validateFields(record);
@@ -32,9 +35,10 @@ describe('init entity', () => {
 
   describe('setSpecificField', () => {
     it('Should ignore undefined fields', () => {
-      const record: entity = {
+      const record: record = {
         displayName: 'a',
         lastName: undefined,
+        ds: 'test',
       };
       const entity: entity = {};
 
@@ -42,52 +46,66 @@ describe('init entity', () => {
       setSpecificField(entity, record, 'lastName');
 
       assert.isString(entity.displayName);
-      assert.notDeepEqual(record, entity);
+      assert.isFalse(Object.keys(entity).includes('lastName'));
     });
 
     it('Should add fields', () => {
-      const record: entity = {
+      const record: record = {
         displayName: 'a',
         lastName: 'b',
+        ds: 'test',
       };
       const entity: entity = {};
 
       setSpecificField(entity, record, 'displayName');
       setSpecificField(entity, record, 'lastName');
 
-      assert.deepEqual(record, entity);
+      assert.isString(entity.displayName);
+      assert.isString(entity.lastName);
+      assert.isUndefined(entity.firstName);
     });
   });
 
   describe('initEntity', () => {
     it('Should fully init', () => {
-      const record: entity = {
+      const record: record = {
+        displayName: 'a',
+        lastName: 'b',
+        ds: 'test',
+      };
+      const expected: entity = {
         displayName: 'a',
         lastName: 'b',
       };
+
       const entity: entity = {};
 
-      const res = initEntity(entity, record);
+      const actual = initEntity(record, entity);
 
-      assert.deepEqual(record, res);
+      assert.deepEqual(expected, actual);
     });
 
     it('Should not init fail validation field', () => {
-      const record: entity = {
+      const record: record = {
         displayName: 'ds',
         lastName: 'fhj',
         identityCard: undefined,
+        ds: 'test',
       };
 
       const res = initEntity(record);
 
-      assert.notDeepEqual(record, res);
+      assert.isString(res.displayName);
+      assert.isString(res.lastName);
+      assert.isFalse(Object.keys(res).includes('identityCard'));
+      assert.isFalse(Object.keys(res).includes('ds'));
     });
 
     it('Should add fields', () => {
-      const record: entity = {
+      const record: record = {
         displayName: 'a',
         lastName: 'b',
+        ds: 'test',
       };
 
       const entity: entity = {
@@ -101,9 +119,11 @@ describe('init entity', () => {
     });
 
     it('Should not override existing field', () => {
-      const record: entity = {
+      const record: record = {
         displayName: 'a',
         lastName: 'b',
+        akaUnit: 'sf1',
+        ds: 'test',
       };
 
       const entity: entity = {

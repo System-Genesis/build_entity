@@ -1,7 +1,8 @@
 import { logInfo } from '../logger/logger';
-import { entity } from '../types/entityType';
 import { units } from '../units/units';
 import { validator } from './validator.utils';
+import { record } from './../types/recordType';
+import { entity } from './../types/entityType';
 
 export const dataSourceHierarchy: string[] = ['aka', 'eightSocks', 'adS', 'adNn', 'sf', 'city'];
 export const akaStr = dataSourceHierarchy[0];
@@ -26,33 +27,33 @@ export const getPrimeSource = (currUnit: { record: entity }[] | undefined): stri
 };
 
 // enum fn
-export const sortSource = (curr: entity, _: entity) => (curr.entityType === 'Solider' ? 1 : -1);
-export const sortAka = (curr: entity, _: entity) => (curr.personalNumber?.length === 9 ? -1 : 1);
+export const sortSource = (curr: record, _: record) => (curr.entityType === 'Solider' ? 1 : -1);
+export const sortAka = (curr: record, _: record) => (curr.personalNumber?.length === 9 ? -1 : 1);
 
 export const entityValidation = {
-  displayName: (ds: entity) => ds.displayName,
-  entityType: (ds: entity) => ds.entityType,
-  personalNumber: (ds: entity) => ds.personalNumber,
-  firstName: (ds: entity) => ds.firstName,
-  lastName: (ds: entity) => ds.lastName,
-  akaUnit: (ds: entity) => ds.akaUnit,
-  status: (ds: entity) => ds.status,
-  rank: (ds: entity) => ds.rank,
-  mail: (ds: entity) => ds.mail,
-  job: (ds: entity) => ds.job,
-  address: (ds: entity) => ds.address,
-  clearance: (ds: entity) => ds.clearance,
-  pictures: (ds: entity) => ds.pictures,
-  sex: (ds: entity) => ds.sex,
-  birthDate: (ds: entity) => ds.birthDate,
-  createdAt: (ds: entity) => ds.createdAt,
-  updatedAt: (ds: entity) => ds.updatedAt,
-  identityCard: (ds: entity) => validator().identityCard(ds.identityCard),
-  dischargeDay: (ds: entity) => ds.dischargeDay,
-  phone: (ds: entity) => {
+  displayName: (ds: record) => ds.displayName,
+  entityType: (ds: record) => ds.entityType,
+  personalNumber: (ds: record) => ds.personalNumber,
+  firstName: (ds: record) => ds.firstName,
+  lastName: (ds: record) => ds.lastName,
+  akaUnit: (ds: record) => ds.akaUnit,
+  status: (ds: record) => ds.status,
+  rank: (ds: record) => ds.rank,
+  mail: (ds: record) => ds.mail,
+  job: (ds: record) => ds.job,
+  address: (ds: record) => ds.address,
+  clearance: (ds: record) => ds.clearance,
+  pictures: (ds: record) => ds.pictures,
+  sex: (ds: record) => ds.sex,
+  birthDate: (ds: record) => ds.birthDate,
+  createdAt: (ds: record) => ds.createdAt,
+  updatedAt: (ds: record) => ds.updatedAt,
+  identityCard: (ds: record) => validator().identityCard(ds.identityCard),
+  dischargeDay: (ds: record) => ds.dischargeDay,
+  phone: (ds: record) => {
     if (ds.phone) return !Array.isArray(ds.phone) ? (ds.phone = [ds.phone]) : ds.phone;
 
     return null;
   },
-  mobilePhone: (ds: entity) => ds.mobilePhone,
+  mobilePhone: (ds: record) => ds.mobilePhone,
 };

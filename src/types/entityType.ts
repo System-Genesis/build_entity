@@ -1,4 +1,4 @@
-export type entity = {
+export interface entity {
   displayName?: string;
   entityType?: string;
   identityCard?: string;
@@ -25,4 +25,4 @@ export type entity = {
   birthDate?: Date;
   createdAt?: Date;
   updatedAt?: Date;
-};
+}
