@@ -1,13 +1,15 @@
-import { initEntity as setEntity } from './initEntity';
+import { setEntity } from './setEntity';
 import { entity } from '../types/entityType';
-import { akaStr, dataSourceHierarchy } from '../utils/entity.utils';
+import { akaStr, sourceHierarchy } from '../utils/entity.utils';
 import { getPrimeSource, sortAka, sortSource } from '../utils/entity.utils';
 import { mergedObj } from '../types/mergedObjType';
 import { logInfo } from '../logger/logger';
 import { record } from '../types/recordType';
 
 /**
- * Create array of records ordered by hierarchy of dataSource
+ * Create array of records ordered by hierarchy of source
+ * Prefer aka source first, prime source second
+ * In each source sort the records according his sort logic
  *
  * @param data original obj from queue
  * @returns Array of records ordered by hierarchy
@@ -19,12 +21,14 @@ export const getRecordsByHierarchy = (data: mergedObj): record[] => {
   let akaRecords: entity[] = [];
   let primeRecords: entity[] = [];
 
-  dataSourceHierarchy.forEach((d) => {
-    if (data[d]) {
-      const records = data[d]?.map(mapToDSRecords(d)).sort(sortSource);
+  sourceHierarchy.forEach((source) => {
+    if (data[source]) {
+      console.log(source);
 
-      if (d === akaStr) akaRecords = records.sort(sortAka);
-      else if (d === primeUnitStr) primeRecords = records;
+      const records = data[source]?.map(mapToDSRecords(source)).sort(sortSource);
+
+      if (source === akaStr) akaRecords = records.sort(sortAka);
+      else if (source === primeUnitStr) primeRecords = records;
       else records.forEach((record: entity) => allRecords.push(record));
     }
   });
@@ -35,7 +39,7 @@ export const getRecordsByHierarchy = (data: mergedObj): record[] => {
 /**
  * Create entity for krtfl from all records
  *
- * @param allRecords records from all given dataSources
+ * @param allRecords records from all given sources
  * @returns Entity ready for krtfl
  */
 const buildEntity = (allRecords: record[]): entity => {
@@ -44,10 +48,7 @@ const buildEntity = (allRecords: record[]): entity => {
   if (process.env.VALIDATE) {
     allRecords.forEach((record) => (entity = setEntity(record, entity)));
   } else {
-    allRecords.reverse().forEach((record) => Object.assign(entity, record));
-
-    // delete undefined fields
-    Object.keys(entity).forEach((field) => (!entity[field] ? delete entity[field] : null));
+    allRecords.reverse().forEach((record) => Object.assign(entity, getTruthyFields(record)));
   }
 
   logInfo('Result entity => ', entity);
@@ -71,9 +72,15 @@ export const createEntity = async (data: mergedObj) => {
   return buildEntity(allRecords);
 };
 
-function mapToDSRecords(d: string): any {
+function getTruthyFields(obj: object) {
+  Object.keys(obj).forEach((field) => (!obj[field] ? delete obj[field] : null));
+
+  return obj;
+}
+
+function mapToDSRecords(source: string): any {
   return ({ record }) => {
-    record.ds = d;
+    record.source = source;
     return record;
   };
 }

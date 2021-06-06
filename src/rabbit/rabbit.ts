@@ -12,6 +12,7 @@ export const connectRabbit = async () => {
 
   await menash.declareQueue(config.rabbit.getData);
   await menash.declareQueue(config.rabbit.sendData);
+  await menash.declareQueue(config.rabbit.logger);
 
   logInfo('Rabbit connected');
 

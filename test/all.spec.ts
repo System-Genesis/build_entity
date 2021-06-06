@@ -6,7 +6,7 @@ chai.should();
 
 describe('all', () => {
   describe('hierarchy', () => {
-    it('Should prefer aka fields vs other ds fields', async () => {
+    it('Should prefer aka fields vs other source fields', async () => {
       const data: mergedObj = {
         aka: [{ record: { firstName: 'd' } }],
         sf: [{ record: { firstName: 'c' } }],
@@ -18,12 +18,12 @@ describe('all', () => {
         },
       };
 
-      const res = (await createEntity(data as unknown as mergedObj)) || { firstName: 'error' };
+      const res = (await createEntity(data)) || { firstName: 'error' };
 
       assert.equal(res.firstName, 'd');
     });
 
-    it('Should prefer aka fields vs prime ds fields', async () => {
+    it('Should prefer aka fields vs prime source fields', async () => {
       const data: mergedObj = {
         aka: [{ record: { firstName: 'd', akaUnit: 'sf1' } }],
         sf: [{ record: { firstName: 'c' } }],
@@ -35,12 +35,12 @@ describe('all', () => {
         },
       };
 
-      const res = (await createEntity(data as unknown as mergedObj)) || { firstName: 'error' };
+      const res = (await createEntity(data)) || { firstName: 'error' };
 
       assert.equal(res.firstName, 'd');
     });
 
-    it('Should prefer prime fields vs other ds fields', async () => {
+    it('Should prefer prime fields vs other source fields', async () => {
       const data: mergedObj = {
         aka: [{ record: { akaUnit: 'sf1' } }],
         sf: [{ record: { firstName: 'd' } }],
@@ -53,14 +53,14 @@ describe('all', () => {
         },
       };
 
-      const res = (await createEntity(data as unknown as mergedObj)) || { firstName: 'error' };
+      const res = (await createEntity(data)) || { firstName: 'error' };
 
       assert.equal(res.firstName, 'd');
     });
   });
 
   describe('logic', () => {
-    it('Should add fields from other ds', async () => {
+    it('Should add fields from other source', async () => {
       const data: mergedObj = {
         aka: [{ record: { job: 'good job', akaUnit: 'sf1' } }],
         sf: [{ record: { firstName: 'd' } }],
@@ -74,7 +74,7 @@ describe('all', () => {
         },
       };
 
-      const res = (await createEntity(data as unknown as mergedObj)) || { status: 'error' };
+      const res = (await createEntity(data)) || { status: 'error' };
 
       assert.equal(res.status, 'good');
       assert.equal(res.job, 'good job');
@@ -94,12 +94,12 @@ describe('all', () => {
         },
       };
 
-      const res = (await createEntity(data as unknown as mergedObj)) || { firstName: 'error' };
+      const res = (await createEntity(data)) || { firstName: 'error' };
 
       assert.isFalse(Object.keys(res).includes('lastName'));
     });
 
-    it('Should prefer akaSoldier before akaOther', async () => {
+    it('Should inse personalNumber=9 ', async () => {
       const data: mergedObj = {
         aka: [
           { record: { firstName: 'lose', personalNumber: '156' } },
@@ -113,7 +113,7 @@ describe('all', () => {
         },
       };
 
-      const res = (await createEntity(data as unknown as mergedObj)) || { firstName: 'error' };
+      const res = (await createEntity(data)) || { firstName: 'error' };
 
       assert.equal(res.firstName, 'win');
       assert.equal(res.lastName, 'last');

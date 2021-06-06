@@ -1,5 +1,5 @@
 {
-  "name": "mockkar",
+  "name": "build-entity",
   "version": "1.0.0",
   "description": "",
   "main": "src/server.ts",
@@ -8,20 +8,17 @@
     "prod": "npm run docker",
     "test": "mocha -r ts-node/register test/*.ts",
     "test.all": "mocha -r ts-node/register test/all*.ts",
-    "docker": "docker build -t mock . ",
+    "docker": "docker build -t build-entity . ",
     "start": "nodemon ./src/server.ts"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/770menahem/mockKar.git"
+    "url": "git+https://github.com/System-Genesis/buildEntities.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/770menahem/mockKar/issues"
-  },
-  "homepage": "https://github.com/770menahem/mockKar#readme",
+ 
   "dependencies": {
     "dotenv": "^8.2.0",
     "dotenv-override": "^5.0.1",

@@ -1,5 +1,5 @@
 import { entity } from './entityType';
 
 export interface record extends entity {
-  ds: string;
+  source: string;
 }

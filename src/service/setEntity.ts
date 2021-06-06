@@ -6,17 +6,16 @@ import { record } from '../types/recordType';
 /**
  * Add fields to entity from record
  *
- * @param record record from dataSource
+ * @param record record from source
  * @param entity entity that builded before and add new fields
  * @returns entity with the new fields
  */
-export const initEntity = (record: record, entity: entity = {}) => {
-  logInfo(`Start with Record from ${record.ds} => `, record);
-  // logInfo('Copy fields to => ', entity);
+export const setEntity = (record: record, entity: entity = {}) => {
+  logInfo(`Start with Record from ${record.source} => `, record);
 
   validateFields(record).forEach((fieldName) => setSpecificField(entity, record, fieldName));
 
-  logInfo(`End with Record from ${record.ds}`);
+  logInfo(`End with Record from ${record.source}`);
   logInfo(`---------------------------------`);
   return entity;
 };
@@ -24,7 +23,7 @@ export const initEntity = (record: record, entity: entity = {}) => {
 /**
  * Check which field to get from this record
  *
- * @param record record from dataSource
+ * @param record record from source
  * @returns array of fields name that pass the validation
  */
 export function validateFields(record: record): string[] {
@@ -36,7 +35,6 @@ export function validateFields(record: record): string[] {
     }
   });
 
-  // logInfo(`Fields to copy => ${validatedFields}`);
   return validatedFields;
 }
 
@@ -49,7 +47,7 @@ export function validateFields(record: record): string[] {
  */
 export function setSpecificField(entity: entity, record: record, fieldName: string) {
   if (!entity[fieldName] && record[fieldName]) {
-    logInfo(`Set ${fieldName} = ${record[fieldName]}; from ${record.ds}`);
+    logInfo(`Set ${fieldName} = ${record[fieldName]}; from ${record.source}`);
 
     entity[fieldName] = record[fieldName];
   }

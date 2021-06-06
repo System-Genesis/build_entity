@@ -1,6 +1,6 @@
 import chai, { assert } from 'chai';
 import { entity } from '../src/types/entityType';
-import { initEntity, setSpecificField, validateFields } from '../src/service/initEntity';
+import { setEntity, setSpecificField, validateFields } from '../src/service/setEntity';
 import { getPrimeSource } from '../src/utils/entity.utils';
 import { record } from './../src/types/recordType';
 
@@ -13,7 +13,7 @@ describe('init entity', () => {
         displayName: 'a',
         entityType: 'b',
         identityCard: '8112005',
-        ds: 'test',
+        source: 'test',
       };
 
       const res = validateFields(record);
@@ -25,7 +25,7 @@ describe('init entity', () => {
         displayName: 'a',
         entityType: 'b',
         identityCard: '800',
-        ds: 'test',
+        source: 'test',
       };
 
       const res = validateFields(record);
@@ -38,7 +38,7 @@ describe('init entity', () => {
       const record: record = {
         displayName: 'a',
         lastName: undefined,
-        ds: 'test',
+        source: 'test',
       };
       const entity: entity = {};
 
@@ -53,7 +53,7 @@ describe('init entity', () => {
       const record: record = {
         displayName: 'a',
         lastName: 'b',
-        ds: 'test',
+        source: 'test',
       };
       const entity: entity = {};
 
@@ -71,7 +71,7 @@ describe('init entity', () => {
       const record: record = {
         displayName: 'a',
         lastName: 'b',
-        ds: 'test',
+        source: 'test',
       };
       const expected: entity = {
         displayName: 'a',
@@ -80,7 +80,7 @@ describe('init entity', () => {
 
       const entity: entity = {};
 
-      const actual = initEntity(record, entity);
+      const actual = setEntity(record, entity);
 
       assert.deepEqual(expected, actual);
     });
@@ -90,10 +90,10 @@ describe('init entity', () => {
         displayName: 'ds',
         lastName: 'fhj',
         identityCard: undefined,
-        ds: 'test',
+        source: 'test',
       };
 
-      const res = initEntity(record);
+      const res = setEntity(record);
 
       assert.isString(res.displayName);
       assert.isString(res.lastName);
@@ -105,14 +105,14 @@ describe('init entity', () => {
       const record: record = {
         displayName: 'a',
         lastName: 'b',
-        ds: 'test',
+        source: 'test',
       };
 
       const entity: entity = {
         displayName: 'c',
       };
 
-      const res = initEntity(record, entity);
+      const res = setEntity(record, entity);
 
       assert.equal(res.displayName, 'c');
       assert.equal(res.lastName, 'b');
@@ -123,7 +123,7 @@ describe('init entity', () => {
         displayName: 'a',
         lastName: 'b',
         akaUnit: 'sf1',
-        ds: 'test',
+        source: 'test',
       };
 
       const entity: entity = {
@@ -131,7 +131,7 @@ describe('init entity', () => {
         lastName: 'd',
       };
 
-      const res = initEntity(record, entity);
+      const res = setEntity(record, entity);
 
       assert.equal(res.displayName, 'c');
       assert.equal(res.lastName, 'd');
