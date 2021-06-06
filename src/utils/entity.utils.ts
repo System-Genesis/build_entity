@@ -3,8 +3,9 @@ import { units } from '../units/units';
 import { validator } from './validator.utils';
 import { record } from './../types/recordType';
 import { entity } from './../types/entityType';
+import configEnv from '../config/env.config';
 
-export const dataSourceHierarchy: string[] = ['aka', 'eightSocks', 'adS', 'adNn', 'sf', 'city'];
+export const dataSourceHierarchy: string[] = configEnv.ds_h;
 export const akaStr = dataSourceHierarchy[0];
 
 /**
