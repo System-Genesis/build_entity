@@ -23,8 +23,6 @@ export const getRecordsByHierarchy = (data: mergedObj): record[] => {
 
   sourceHierarchy.forEach((source) => {
     if (data[source]) {
-      console.log(source);
-
       const records = data[source]?.map(mapToDSRecords(source)).sort(sortSource);
 
       if (source === akaStr) akaRecords = records.sort(sortAka);
