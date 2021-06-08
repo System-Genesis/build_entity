@@ -6,8 +6,6 @@ import { entity } from '../types/entityType';
 import { mergedObj } from '../types/mergedObjType';
 
 export const connectRabbit = async () => {
-  logInfo('Connecting to Rabbit...');
-
   await menash.connect(config.rabbit.uri, config.rabbit.retryOptions);
 
   await menash.declareQueue(config.rabbit.getData);
