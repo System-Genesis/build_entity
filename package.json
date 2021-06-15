@@ -9,7 +9,7 @@
     "test": "mocha -r ts-node/register test/*.ts",
     "test.all": "mocha -r ts-node/register test/all*.ts",
     "docker": "docker build -t build-entity . ",
-    "start": "nodemon ./src/server.ts"
+    "start": "nodemon ./src/app.ts"
   },
   "repository": {
     "type": "git",
@@ -18,7 +18,6 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
- 
   "dependencies": {
     "dotenv": "^8.2.0",
     "dotenv-override": "^5.0.1",
