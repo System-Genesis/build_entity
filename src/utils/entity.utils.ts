@@ -66,6 +66,7 @@ export const entityValidation = {
   birthDate: (source: record) => source.birthDate,
   createdAt: (source: record) => source.createdAt,
   updatedAt: (source: record) => source.updatedAt,
+  goalUserId:(source: record) => source.goalUserId,
   identityCard: (source: record) => validator().identityCard(source.identityCard),
   dischargeDay: (source: record) => source.dischargeDay,
   phone: (source: record) => validatePhone(source.phone),

@@ -1,5 +1,6 @@
 export interface entity {
   displayName?: string;
+  goalUserId?:string;
   entityType?: string;
   identityCard?: string;
   personalNumber?: string;
