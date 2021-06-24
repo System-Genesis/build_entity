@@ -16,7 +16,6 @@ export const setEntity = (record: record, entity: entity = {}) => {
   validateFields(record).forEach((fieldName) => setSpecificField(entity, record, fieldName));
 
   logInfo(`End with Record from ${record.source}`);
-  logInfo(`---------------------------------`);
   return entity;
 };
 
