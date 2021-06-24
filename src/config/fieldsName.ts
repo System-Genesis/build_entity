@@ -3,4 +3,5 @@ export default {
     s: 'agumon',
     c: 'digimon',
   },
+  preferdRank: 'az'
 };

@@ -36,8 +36,8 @@ export const sortSource = (curr: record, next: record) => {
 };
 
 // Id first
-export const sortAka = (curr: record, next: record) => {
-  return curr.personalNumber?.length === 9 || next.personalNumber?.length !== 9 ? -1 : 1;
+export const sortAka = (curr: record, _: record) => {
+  return curr.rank === fieldsName.preferdRank ? 1 : -1;
 };
 
 const validatePhone = (phone: string | undefined | string[]) => {
