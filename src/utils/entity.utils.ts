@@ -37,7 +37,7 @@ export const sortSource = (curr: record, next: record) => {
 
 // Id first
 export const sortAka = (curr: record, _: record) => {
-  return curr.rank === fieldsName.preferdRank ? 1 : -1;
+  return curr.rank === fieldsName.preferredRank ? 1 : -1;
 };
 
 const validatePhone = (phone: string | undefined | string[]) => {
@@ -66,7 +66,7 @@ export const entityValidation = {
   birthDate: (source: record) => source.birthDate,
   createdAt: (source: record) => source.createdAt,
   updatedAt: (source: record) => source.updatedAt,
-  goalUserId:(source: record) => source.goalUserId,
+  goalUserId: (source: record) => source.goalUserId,
   identityCard: (source: record) => validator().identityCard(source.identityCard),
   dischargeDay: (source: record) => source.dischargeDay,
   phone: (source: record) => validatePhone(source.phone),

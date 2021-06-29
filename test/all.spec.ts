@@ -99,7 +99,7 @@ describe('all', () => {
       assert.isFalse(Object.keys(res).includes('lastName'));
     });
 
-    it('Should inse personalNumber=9 ', async () => {
+    it('Should insert personalNumber = 9 ', async () => {
       const data: mergedObj = {
         aka: [
           { record: { firstName: 'lose', personalNumber: '156' } },

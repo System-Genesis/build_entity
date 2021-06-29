@@ -5,6 +5,7 @@ import { getPrimeSource, sortAka, sortSource } from '../utils/entity.utils';
 import { mergedObj } from '../types/mergedObjType';
 import { logInfo } from '../logger/logger';
 import { record } from '../types/recordType';
+import fieldsName from '../config/fieldsName';
 
 /**
  * Create array of records ordered by hierarchy of source
@@ -40,13 +41,18 @@ export const getRecordsByHierarchy = (data: mergedObj): record[] => {
  * @param allRecords records from all given sources
  * @returns Entity ready for krtfl
  */
-const buildEntity = (allRecords: record[]): entity => {
+export const buildEntity = (allRecords: record[]): entity => {
   let entity: entity = {};
 
   if (process.env.VALIDATE) {
     allRecords.forEach((record) => (entity = setEntity(record, entity)));
   } else {
     allRecords.reverse().forEach((record) => Object.assign(entity, getTruthyFields(record)));
+  }
+
+  // Optional civilian
+  if (entity.entityType == fieldsName.entityType.s && entity.identityCard) {
+    entity.entityType = gerPriorityEntityType(allRecords, entity.entityType);
   }
 
   logInfo('Result entity => ', entity);
@@ -81,4 +87,14 @@ function mapToDSRecords(source: string): any {
     record.source = source;
     return record;
   };
+}
+
+function gerPriorityEntityType(allRecords: record[], entityType: string): string {
+  for (const record of allRecords) {
+    if (record.entityType === fieldsName.entityType.c) {
+      return record.entityType;
+    }
+  }
+
+  return entityType;
 }
