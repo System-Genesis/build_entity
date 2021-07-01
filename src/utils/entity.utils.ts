@@ -1,8 +1,8 @@
-import { logInfo } from '../logger/logger';
 import { units } from '../units/units';
 import { validator } from './validator.utils';
 import { record } from './../types/recordType';
 import { entity } from './../types/entityType';
+
 import configEnv from '../config/env.config';
 import fieldsName from '../config/fieldsName';
 
@@ -24,7 +24,6 @@ export const getPrimeSource = (currUnit: { record: entity }[] | undefined): stri
     if (units[u].includes(currUnit[0].record.akaUnit)) unit = u;
   });
 
-  logInfo('Prime source = ' + unit);
   return unit;
 };
 

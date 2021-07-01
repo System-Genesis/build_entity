@@ -1,8 +1,8 @@
 import { entityValidation } from '../utils/entity.utils';
-import { logInfo } from '../logger/logger';
 import { entity } from '../types/entityType';
 import { record } from '../types/recordType';
 
+let setFieldsLog: string = '';
 /**
  * Add fields to entity from record
  *
@@ -10,12 +10,13 @@ import { record } from '../types/recordType';
  * @param entity entity that builded before and add new fields
  * @returns entity with the new fields
  */
-export const setEntity = (record: record, entity: entity = {}) => {
-  logInfo(`Start with Record from ${record.source} => `, record);
+export const setEntity = (record: record, logMsg: { msg: string }, entity: entity = {}) => {
+  setFieldsLog = '';
 
   validateFields(record).forEach((fieldName) => setSpecificField(entity, record, fieldName));
 
-  logInfo(`End with Record from ${record.source}`);
+  logMsg.msg += setFieldsLog;
+
   return entity;
 };
 
@@ -27,7 +28,6 @@ export const setEntity = (record: record, entity: entity = {}) => {
  */
 export function validateFields(record: record): string[] {
   const validatedFields: string[] = [];
-
   Object.keys(entityValidation).forEach((eliValidatorerationer) => {
     if (record[eliValidatorerationer] && entityValidation[eliValidatorerationer](record)) {
       validatedFields.push(eliValidatorerationer);
@@ -46,7 +46,7 @@ export function validateFields(record: record): string[] {
  */
 export function setSpecificField(entity: entity, record: record, fieldName: string) {
   if (!entity[fieldName] && record[fieldName]) {
-    logInfo(`Set ${fieldName} = ${record[fieldName]}; from ${record.source}`);
+    setFieldsLog += `Set ${fieldName} = ${record[fieldName]}; from ${record.source}.\n`;
 
     entity[fieldName] = record[fieldName];
   }

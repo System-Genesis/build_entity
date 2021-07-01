@@ -1,5 +1,11 @@
 import { entity } from './entityType';
 
+export type identifiers = {
+  personalNumber?: string;
+  identityCard?: string;
+  goalUser?: string;
+};
+
 export type mergedObj = {
   aka?: { record: entity }[];
   eightSocks?: { record: entity }[];
@@ -8,9 +14,5 @@ export type mergedObj = {
   adNn?: { record: entity }[];
   adS?: { record: entity }[];
 
-  identifiers: {
-    personalNumber: string;
-    identityCard: string;
-    goalUser: string;
-  };
+  identifiers: identifiers;
 };

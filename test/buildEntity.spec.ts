@@ -48,19 +48,21 @@ describe('Build entity', () => {
   describe('buildEntity', () => {
     it('Should return entity type C', () => {
       const records: record[] = [
-        { source: 'aka', firstName: 'a', identityCard: '1564151' },
+        { source: 'aka', firstName: 'a', identityCard: '207026568' },
         { source: 'es', firstName: 'b', entityType: fieldsName.entityType.s },
         { source: 'sf', firstName: 'sf', entityType: fieldsName.entityType.s },
         { source: 'ads', firstName: 'c', entityType: fieldsName.entityType.s },
         { source: 'adnn', firstName: 'e', entityType: fieldsName.entityType.c },
       ];
 
-      const res = buildEntity(records);
+      const res = buildEntity(records, { identityCard: '207026568' });
+
+      console.log(res);
 
       assert.equal(fieldsName.entityType.c, res.entityType);
     });
 
-    it('Should return entity type C', () => {
+    it('Should return entity type S', () => {
       const records: record[] = [
         { source: 'aka', firstName: 'a', identityCard: '1564151' },
         { source: 'es', firstName: 'b', entityType: fieldsName.entityType.s },
@@ -69,7 +71,7 @@ describe('Build entity', () => {
         { source: 'adnn', firstName: 'e', entityType: fieldsName.entityType.s },
       ];
 
-      const res = buildEntity(records);
+      const res = buildEntity(records, { personalNumber: '2131' });
 
       assert.equal(fieldsName.entityType.s, res.entityType);
     });
@@ -83,7 +85,7 @@ describe('Build entity', () => {
         { source: 'adnn', firstName: 'e', entityType: fieldsName.entityType.c },
       ];
 
-      const res = buildEntity(records);
+      const res = buildEntity(records, { personalNumber: '2131' });
 
       assert.equal(fieldsName.entityType.g, res.entityType);
     });

@@ -15,13 +15,13 @@ const logger = winston.createLogger({
     //   format: 'YYYY-MM-DD HH:mm:ss',
     // }),
     format.splat(),
-    format.simple(),
+    format.simple()
     // format((info) => {
     //   info.service = 'build entity';
     //   info.hostname = os.hostname();
     //   return info;
     // })(),
-    format.json()
+    // format.json()
   ),
   transports: [
     new winston.transports.Console(),
@@ -32,26 +32,30 @@ const logger = winston.createLogger({
   ],
 });
 
-export const logInfo = (msg: string, any?: any ) => {
+export const logs = (level: string, msg: string, any?: any) => {
   menash.send(configEnv.rabbit.logger, {
-    level: 'info',
+    level,
     message: `${msg}. ${any ? JSON.stringify(any) : ''}`,
-    system: 'traking',
-    service: 'build entity',
-    extraFields: any
+    system: 'TRAKING',
+    service: 'BUILD_ENTITY',
+    extraFields: any,
   });
-  
+
   if (any) logger.info(`${msg} ${JSON.stringify(any)}`);
   else logger.info(msg);
 };
 
-export const logError = (msg: string, any?: any ) => {
-  menash.send(configEnv.rabbit.logger, {
-    level: 'error',
-    message: `${msg}. ${any ? JSON.stringify(any) : ''}`,
-    system: 'traking',
-    service: 'build entity',
-    extraFields: any
-  });
-  logger.error(`${msg} ${!any ? '' : JSON.stringify(any)}`);
+export const logInfoLocal = (msg: string, any?: any) => {
+  if (any) logger.info(`${msg} ${JSON.stringify(any)}`);
+  else logger.info(msg);
+};
+
+export const logError = (msg: string, any?: any) => {
+  logs('error', msg, any);
+};
+export const logInfo = (msg: string, any?: any) => {
+  logs('info', msg, any);
+};
+export const logWarn = (msg: string, any?: any) => {
+  logs('warn', msg, any);
 };

@@ -5,6 +5,7 @@ import { getPrimeSource } from '../src/utils/entity.utils';
 import { record } from './../src/types/recordType';
 
 chai.should();
+const logMsg = { msg: '' };
 
 describe('init entity', () => {
   describe('validateFields', () => {
@@ -80,7 +81,7 @@ describe('init entity', () => {
 
       const entity: entity = {};
 
-      const actual = setEntity(record, entity);
+      const actual = setEntity(record, logMsg, entity);
 
       assert.deepEqual(expected, actual);
     });
@@ -93,7 +94,7 @@ describe('init entity', () => {
         source: 'test',
       };
 
-      const res = setEntity(record);
+      const res = setEntity(record, logMsg);
 
       assert.isString(res.displayName);
       assert.isString(res.lastName);
@@ -112,7 +113,7 @@ describe('init entity', () => {
         displayName: 'c',
       };
 
-      const res = setEntity(record, entity);
+      const res = setEntity(record, logMsg, entity);
 
       assert.equal(res.displayName, 'c');
       assert.equal(res.lastName, 'b');
@@ -131,7 +132,7 @@ describe('init entity', () => {
         lastName: 'd',
       };
 
-      const res = setEntity(record, entity);
+      const res = setEntity(record, logMsg, entity);
 
       assert.equal(res.displayName, 'c');
       assert.equal(res.lastName, 'd');

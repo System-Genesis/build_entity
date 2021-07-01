@@ -88,9 +88,7 @@ describe('all', () => {
         city: [{ record: { firstName: 'c', lastName: undefined } }],
 
         identifiers: {
-          personalNumber: 'string',
-          identityCard: 'string',
-          goalUser: 'string',
+          personalNumber: '156456',
         },
       };
 
