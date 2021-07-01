@@ -24,10 +24,10 @@ export const connectRabbit = async () => {
         const entity = await createEntity(mergedObj);
 
         if (entity) {
-          logInfo('Entity builded');
+          logInfoLocal('Entity builded');
 
           await sendRecordToDiff(entity);
-          logInfo('Send to dif queue');
+          logInfoLocal('Send to dif queue');
 
           msg.ack();
         } else {
@@ -48,7 +48,7 @@ export const sendRecordToDiff = async (data: entity) => {
   try {
     await menash.send(config.rabbit.sendData, data);
   } catch (error) {
-    logInfo(`${error}`.split('at C')[0]);
+    logError(error, data);
   }
 };
 
