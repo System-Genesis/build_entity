@@ -47,6 +47,7 @@ const validatePhone = (phone: string | undefined | string[]) => {
   return null;
 };
 
+// For ant needed validation (in Future)
 export const entityValidation = {
   displayName: (source: record) => source.displayName,
   entityType: (source: record) => source.entityType,
