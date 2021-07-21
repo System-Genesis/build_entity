@@ -41,8 +41,8 @@ export const logs = (level: string, msg: string, any?: any) => {
     extraFields: any,
   });
 
-  if (any) logger.info(`${msg} ${JSON.stringify(any)}`);
-  else logger.info(msg);
+  if (any) logger[level](`${msg} ${JSON.stringify(any)}`);
+  else logger[level](msg);
 };
 
 export const logInfoLocal = (msg: string, any?: any) => {

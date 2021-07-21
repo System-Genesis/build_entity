@@ -15,8 +15,10 @@ export const akaStr = sourceHierarchy[0];
  * @param currUnit unit for search in all units and get the prime source
  * @returns source name
  */
-export const getPrimeSource = (currUnit: { record: entity }[] | undefined): string => {
-  if (!currUnit) return '';
+export const getPrimeSource = (
+  currUnit: { record: entity }[] | undefined
+): string => {
+  if (!currUnit || currUnit.length == 0) return '';
 
   let unit: string = '';
 
@@ -29,7 +31,8 @@ export const getPrimeSource = (currUnit: { record: entity }[] | undefined): stri
 
 // Prefer agumon first
 export const sortSource = (curr: record, next: record) => {
-  return next.entityType === fieldsName.entityType.c || curr.entityType === fieldsName.entityType.s
+  return next.entityType === fieldsName.entityType.c ||
+    curr.entityType === fieldsName.entityType.s
     ? -1
     : 1;
 };
@@ -67,7 +70,8 @@ export const entityValidation = {
   createdAt: (source: record) => source.createdAt,
   updatedAt: (source: record) => source.updatedAt,
   goalUserId: (source: record) => source.goalUserId,
-  identityCard: (source: record) => validator().identityCard(source.identityCard),
+  identityCard: (source: record) =>
+    validator().identityCard(source.identityCard),
   dischargeDay: (source: record) => source.dischargeDay,
   phone: (source: record) => validatePhone(source.phone),
   mobilePhone: (source: record) => source.mobilePhone,
