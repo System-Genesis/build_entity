@@ -4,7 +4,7 @@ import path from 'path';
 import winston, { config, format } from 'winston';
 import configEnv from '../config/env.config';
 
-const date = () => new Date(Date.now()).toLocaleDateString();
+const date = () => new Date(Date.now()).toLocaleDateString().replace(/\//g ,"_");
 
 const logger = winston.createLogger({
   levels: config.npm.levels,
@@ -46,8 +46,8 @@ export const logs = (level: string, msg: string, any?: any) => {
 };
 
 export const logInfoLocal = (msg: string, any?: any) => {
-  console.log(`${msg} ${JSON.stringify(any)}`);
-};
+  console.log(`${msg} ${any?JSON.stringify(any):''}`);
+} ;
 
 export const logError = (msg: string, any?: any) => {
   logs('error', msg, any);
