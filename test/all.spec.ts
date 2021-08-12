@@ -62,10 +62,10 @@ describe('all', () => {
   describe('logic', () => {
     it('Should add fields from other source', async () => {
       const data: mergedObj = {
-        aka: [{ record: { job: 'good job', akaUnit: 'sf1' } }],
+        aka: [{ record: { rank: 'good rank', akaUnit: 'sf1' } }],
         sf: [{ record: { firstName: 'd' } }],
-        city: [{ record: { lastName: undefined, mail: 'mail' } }],
-        eightSocks: [{ record: { firstName: 'c', status: 'good' } }],
+        city: [{ record: { lastName: undefined, address: 'address' } }],
+        es: [{ record: { firstName: 'c', clearance: 'good' } }],
 
         identifiers: {
           personalNumber: 'string',
@@ -74,11 +74,11 @@ describe('all', () => {
         },
       };
 
-      const res = (await createEntity(data)) || { status: 'error' };
+      const res = (await createEntity(data)) || { clearance: 'error' };
 
-      assert.equal(res.status, 'good');
-      assert.equal(res.job, 'good job');
-      assert.equal(res.mail, 'mail');
+      assert.equal(res.clearance, 'good');
+      assert.equal(res.rank, 'good rank');
+      assert.equal(res.address, 'address');
     });
 
     it('Should ignore undefined fields', async () => {

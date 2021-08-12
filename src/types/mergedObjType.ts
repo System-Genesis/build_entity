@@ -8,7 +8,7 @@ export type identifiers = {
 
 export type mergedObj = {
   aka?: { record: entity }[];
-  eightSocks?: { record: entity }[];
+  es?: { record: entity }[];
   sf?: { record: entity }[];
   city?: { record: entity }[];
   adNn?: { record: entity }[];

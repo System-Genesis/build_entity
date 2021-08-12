@@ -40,8 +40,8 @@ describe('Build entity', () => {
         identifiers: { personalNumber: '', identityCard: '', goalUser: '' },
       });
 
-      assert.equal(res[2].akaUnit, 'adNn');
-      assert.equal(res[3].akaUnit, 'city');
+      assert.equal(res[2].akaUnit, 'city');
+      assert.equal(res[3].akaUnit, 'adNn');
     });
   });
 

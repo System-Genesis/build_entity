@@ -11,57 +11,58 @@ describe('init entity', () => {
   describe('validateFields', () => {
     it('Should all pass validation', () => {
       const record: record = {
-        displayName: 'a',
+        clearance: 'a',
         entityType: 'b',
         identityCard: '8112005',
         source: 'test',
       };
 
       const res = validateFields(record);
-      assert.deepEqual(res, ['displayName', 'entityType', 'identityCard']);
+      assert.deepEqual(res, [ 'entityType','clearance', 'identityCard']);
     });
 
     it('Some validation Should fail', () => {
       const record: record = {
-        displayName: 'a',
         entityType: 'b',
+        clearance: 'a',
         identityCard: '800',
         source: 'test',
       };
 
       const res = validateFields(record);
-      assert.notDeepEqual(res, ['displayName', 'entityType', 'identityCard']);
+            
+      assert.notDeepEqual(res, [ 'entityType','clearance', 'identityCard']);
     });
   });
 
   describe('setSpecificField', () => {
     it('Should ignore undefined fields', () => {
       const record: record = {
-        displayName: 'a',
+        clearance: 'a',
         lastName: undefined,
         source: 'test',
       };
       const entity: entity = {};
 
-      setSpecificField(entity, record, 'displayName');
+      setSpecificField(entity, record, 'clearance');
       setSpecificField(entity, record, 'lastName');
 
-      assert.isString(entity.displayName);
+      assert.isString(entity.clearance);
       assert.isFalse(Object.keys(entity).includes('lastName'));
     });
 
     it('Should add fields', () => {
       const record: record = {
-        displayName: 'a',
+        clearance: 'a',
         lastName: 'b',
         source: 'test',
       };
       const entity: entity = {};
 
-      setSpecificField(entity, record, 'displayName');
+      setSpecificField(entity, record, 'clearance');
       setSpecificField(entity, record, 'lastName');
 
-      assert.isString(entity.displayName);
+      assert.isString(entity.clearance);
       assert.isString(entity.lastName);
       assert.isUndefined(entity.firstName);
     });
@@ -70,12 +71,12 @@ describe('init entity', () => {
   describe('initEntity', () => {
     it('Should fully init', () => {
       const record: record = {
-        displayName: 'a',
+        clearance: 'a',
         lastName: 'b',
         source: 'test',
       };
       const expected: entity = {
-        displayName: 'a',
+        clearance: 'a',
         lastName: 'b',
       };
 
@@ -88,7 +89,7 @@ describe('init entity', () => {
 
     it('Should not init fail validation field', () => {
       const record: record = {
-        displayName: 'ds',
+        clearance: 'ds',
         lastName: 'fhj',
         identityCard: undefined,
         source: 'test',
@@ -96,7 +97,7 @@ describe('init entity', () => {
 
       const res = setEntity(record, logMsg);
 
-      assert.isString(res.displayName);
+      assert.isString(res.clearance);
       assert.isString(res.lastName);
       assert.isFalse(Object.keys(res).includes('identityCard'));
       assert.isFalse(Object.keys(res).includes('ds'));
@@ -104,37 +105,37 @@ describe('init entity', () => {
 
     it('Should add fields', () => {
       const record: record = {
-        displayName: 'a',
+        clearance: 'a',
         lastName: 'b',
         source: 'test',
       };
 
       const entity: entity = {
-        displayName: 'c',
+        clearance: 'c',
       };
 
       const res = setEntity(record, logMsg, entity);
 
-      assert.equal(res.displayName, 'c');
+      assert.equal(res.clearance, 'c');
       assert.equal(res.lastName, 'b');
     });
 
     it('Should not override existing field', () => {
       const record: record = {
-        displayName: 'a',
+        clearance: 'a',
         lastName: 'b',
         akaUnit: 'sf1',
         source: 'test',
       };
 
       const entity: entity = {
-        displayName: 'c',
+        clearance: 'c',
         lastName: 'd',
       };
 
       const res = setEntity(record, logMsg, entity);
 
-      assert.equal(res.displayName, 'c');
+      assert.equal(res.clearance, 'c');
       assert.equal(res.lastName, 'd');
     });
   });
