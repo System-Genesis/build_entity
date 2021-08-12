@@ -57,8 +57,6 @@ describe('Build entity', () => {
 
       const res = buildEntity(records, { identityCard: '207026568' });
 
-      console.log(res);
-
       assert.equal(fieldsName.entityType.c, res.entityType);
     });
 

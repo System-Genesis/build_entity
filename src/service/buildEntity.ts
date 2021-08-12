@@ -25,20 +25,13 @@ export const getRecordsByHierarchy = (data: mergedObj): record[] => {
 
   sourceHierarchy.forEach((source) => {
     if (data[source]) {
-      const records = data[source]
-        ?.map(mapToDSRecords(source))
-        .sort(sortSource);
+      const records = data[source]?.map(mapToDSRecords(source)).sort(sortSource);
 
       if (source === akaStr) akaRecords = records.sort(sortAka);
       else if (source === primeUnitStr) primeRecords = records;
       else records.forEach((record: entity) => allRecords.push(record));
     }
   });
-  console.log(data);
-
-  console.log(akaRecords);
-  console.log(primeRecords);
-  console.log(allRecords);
 
   return [...akaRecords, ...primeRecords, ...allRecords];
 };
@@ -49,33 +42,22 @@ export const getRecordsByHierarchy = (data: mergedObj): record[] => {
  * @param allRecords records from all given sources
  * @returns Entity ready for krtfl
  */
-export const buildEntity = (
-  allRecords: record[],
-  identifiers: identifiers
-): entity => {
+export const buildEntity = (allRecords: record[], identifiers: identifiers): entity => {
   let entity: entity = {};
 
   if (process.env.VALIDATE) {
     const logMsg = { msg: '' };
 
-    allRecords.forEach(
-      (record) => (entity = setEntity(record, logMsg, entity))
-    );
+    allRecords.forEach((record) => (entity = setEntity(record, logMsg, entity)));
 
     logInfo(logMsg.msg, identifiers);
   } else {
-    allRecords
-      .reverse()
-      .forEach((record) => Object.assign(entity, getTruthyFields(record)));
+    allRecords.reverse().forEach((record) => Object.assign(entity, getTruthyFields(record)));
   }
 
   // Optional civilian
   if (entity.entityType == fieldsName.entityType.s && entity.identityCard) {
-    entity.entityType = gerPriorityEntityType(
-      allRecords,
-      entity.entityType,
-      identifiers
-    );
+    entity.entityType = gerPriorityEntityType(allRecords, entity.entityType, identifiers);
   }
 
   logInfo('Result entity => ', entity);
@@ -119,10 +101,7 @@ export function gerPriorityEntityType(
 ): string {
   for (const record of allRecords) {
     if (record.entityType === fieldsName.entityType.c) {
-      logInfo(
-        `Change entityType to ${fieldsName.entityType.c} from ${record.source}`,
-        identifiers
-      );
+      logInfo(`Change entityType to ${fieldsName.entityType.c} from ${record.source}`, identifiers);
       return record.entityType;
     }
   }
