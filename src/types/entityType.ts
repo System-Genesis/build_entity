@@ -1,6 +1,6 @@
 export interface entity {
   displayName?: string;
-  goalUserId?:string;
+  goalUserId?: string;
   entityType?: string;
   identityCard?: string;
   personalNumber?: string;
@@ -16,7 +16,7 @@ export interface entity {
   mobilePhone?: string[];
   address?: string;
   clearance?: string;
-  pictures?: {
+  picture?: {
     profile?: {
       url?: string;
       meta?: any;
