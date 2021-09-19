@@ -13,7 +13,7 @@ export interface entity {
   mobilePhone?: string[];
   address?: string;
   clearance?: string;
-  pictures?: {
+  picture?: {
     profile?: {
       path?: string;
       meta?: any;

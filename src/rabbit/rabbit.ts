@@ -33,7 +33,7 @@ export const connectRabbit = async () => {
         } else {
           throw 'Entity not builded';
         }
-      } catch (error) {
+      } catch (error : any) {
         logError(error);
 
         // handle error reject or else ...
