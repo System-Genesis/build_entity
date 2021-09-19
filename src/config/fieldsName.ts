@@ -2,6 +2,7 @@ export default {
   entityType: {
     s: 'agumon',
     c: 'digimon',
+    g: 'goalUser',
   },
-  preferdRank: 'az'
+  preferredRank: 'az',
 };

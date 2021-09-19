@@ -2,9 +2,10 @@ import { setEntity } from './setEntity';
 import { entity } from '../types/entityType';
 import { akaStr, sourceHierarchy } from '../utils/entity.utils';
 import { getPrimeSource, sortAka, sortSource } from '../utils/entity.utils';
-import { mergedObj } from '../types/mergedObjType';
-import { logInfo } from '../logger/logger';
+import { mergedObj, identifiers } from '../types/mergedObjType';
+import { logInfo, logWarn } from '../logger/logger';
 import { record } from '../types/recordType';
+import fieldsName from '../config/fieldsName';
 
 /**
  * Create array of records ordered by hierarchy of source
@@ -16,6 +17,7 @@ import { record } from '../types/recordType';
  */
 export const getRecordsByHierarchy = (data: mergedObj): record[] => {
   const primeUnitStr = getPrimeSource(data.aka || data.city);
+  logInfo('Prime source = "' + primeUnitStr + '".', data.identifiers);
 
   const allRecords: any = [];
   let akaRecords: entity[] = [];
@@ -40,13 +42,22 @@ export const getRecordsByHierarchy = (data: mergedObj): record[] => {
  * @param allRecords records from all given sources
  * @returns Entity ready for krtfl
  */
-const buildEntity = (allRecords: record[]): entity => {
+export const buildEntity = (allRecords: record[], identifiers: identifiers): entity => {
   let entity: entity = {};
 
   if (process.env.VALIDATE) {
-    allRecords.forEach((record) => (entity = setEntity(record, entity)));
+    const logMsg = { msg: '' };
+
+    allRecords.forEach((record) => (entity = setEntity(record, logMsg, entity)));
+
+    logInfo(logMsg.msg, identifiers);
   } else {
     allRecords.reverse().forEach((record) => Object.assign(entity, getTruthyFields(record)));
+  }
+
+  // Optional civilian
+  if (entity.entityType == fieldsName.entityType.s && entity.identityCard) {
+    entity.entityType = gerPriorityEntityType(allRecords, entity.entityType, identifiers);
   }
 
   logInfo('Result entity => ', entity);
@@ -62,12 +73,12 @@ const buildEntity = (allRecords: record[]): entity => {
 export const createEntity = async (data: mergedObj) => {
   let allRecords: record[] = getRecordsByHierarchy(data);
 
-  if (allRecords.length === 0) {
-    logInfo(`Didn't get any record`);
-    return null;
+  if (allRecords.length > 0) {
+    return buildEntity(allRecords, data.identifiers);
   }
 
-  return buildEntity(allRecords);
+  logWarn(`Didn't get any record`, data.identifiers);
+  return null;
 };
 
 function getTruthyFields(obj: object) {
@@ -81,4 +92,19 @@ function mapToDSRecords(source: string): any {
     record.source = source;
     return record;
   };
+}
+
+export function gerPriorityEntityType(
+  allRecords: record[],
+  entityType: string,
+  identifiers: identifiers
+): string {
+  for (const record of allRecords) {
+    if (record.entityType === fieldsName.entityType.c) {
+      logInfo(`Change entityType to ${fieldsName.entityType.c} from ${record.source}`, identifiers);
+      return record.entityType;
+    }
+  }
+
+  return entityType;
 }

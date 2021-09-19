@@ -1,8 +1,8 @@
-import { logInfo } from '../logger/logger';
 import { units } from '../units/units';
 import { validator } from './validator.utils';
 import { record } from './../types/recordType';
 import { entity } from './../types/entityType';
+
 import configEnv from '../config/env.config';
 import fieldsName from '../config/fieldsName';
 
@@ -15,8 +15,10 @@ export const akaStr = sourceHierarchy[0];
  * @param currUnit unit for search in all units and get the prime source
  * @returns source name
  */
-export const getPrimeSource = (currUnit: { record: entity }[] | undefined): string => {
-  if (!currUnit) return '';
+export const getPrimeSource = (
+  currUnit: { record: entity }[] | undefined
+): string => {
+  if (!currUnit || currUnit.length == 0) return '';
 
   let unit: string = '';
 
@@ -24,20 +26,20 @@ export const getPrimeSource = (currUnit: { record: entity }[] | undefined): stri
     if (units[u].includes(currUnit[0].record.akaUnit)) unit = u;
   });
 
-  logInfo('Prime source = ' + unit);
   return unit;
 };
 
 // Prefer agumon first
 export const sortSource = (curr: record, next: record) => {
-  return next.entityType === fieldsName.entityType.c || curr.entityType === fieldsName.entityType.s
+  return next.entityType === fieldsName.entityType.c ||
+    curr.entityType === fieldsName.entityType.s
     ? -1
     : 1;
 };
 
 // Id first
 export const sortAka = (curr: record, _: record) => {
-  return curr.rank === fieldsName.preferdRank ? 1 : -1;
+  return curr.rank === fieldsName.preferredRank ? 1 : -1;
 };
 
 const validatePhone = (phone: string | undefined | string[]) => {
@@ -48,26 +50,29 @@ const validatePhone = (phone: string | undefined | string[]) => {
   return null;
 };
 
+// For ant needed validation (in Future)
 export const entityValidation = {
-  displayName: (source: record) => source.displayName,
   entityType: (source: record) => source.entityType,
   personalNumber: (source: record) => source.personalNumber,
+  serviceType: (source: record) => source.serviceType,
   firstName: (source: record) => source.firstName,
   lastName: (source: record) => source.lastName,
   akaUnit: (source: record) => source.akaUnit,
-  status: (source: record) => source.status,
+  // status: (source: record) => source.status,
   rank: (source: record) => source.rank,
-  mail: (source: record) => source.mail,
-  job: (source: record) => source.job,
+  // job: (source: record) => source.job,
+  // displayName: (source: record) => source.displayName,
+  // mail: (source: record) => source.mail,
   address: (source: record) => source.address,
   clearance: (source: record) => source.clearance,
   pictures: (source: record) => source.picture,
   sex: (source: record) => source.sex,
   birthDate: (source: record) => source.birthDate,
-  createdAt: (source: record) => source.createdAt,
-  updatedAt: (source: record) => source.updatedAt,
+  // createdAt: (source: record) => source.createdAt,
+  // updatedAt: (source: record) => source.updatedAt,
   goalUserId: (source: record) => source.goalUserId,
-  identityCard: (source: record) => validator().identityCard(source.identityCard),
+  identityCard: (source: record) =>
+    validator().identityCard(source.identityCard),
   dischargeDay: (source: record) => source.dischargeDay,
   phone: (source: record) => validatePhone(source.phone),
   mobilePhone: (source: record) => source.mobilePhone,

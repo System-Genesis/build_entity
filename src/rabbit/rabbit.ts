@@ -1,11 +1,12 @@
 import menash, { ConsumerMessage } from 'menashmq';
 import config from '../config/env.config';
-import { logInfo, logError } from '../logger/logger';
+import { logInfo, logError, logInfoLocal } from '../logger/logger';
 import { createEntity } from '../service/buildEntity';
 import { entity } from '../types/entityType';
 import { mergedObj } from '../types/mergedObjType';
 
 export const connectRabbit = async () => {
+  logInfoLocal('Try to connect to Rabbit...');
   await menash.connect(config.rabbit.uri, config.rabbit.retryOptions);
 
   await menash.declareQueue(config.rabbit.getData);
@@ -18,15 +19,15 @@ export const connectRabbit = async () => {
     async (msg: ConsumerMessage) => {
       try {
         const mergedObj = msg.getContent() as mergedObj;
-        logInfo(`Got from queue => `, mergedObj);
+        logInfoLocal(`Got from queue => `, mergedObj);
 
         const entity = await createEntity(mergedObj);
 
         if (entity) {
-          logInfo('Entity builded');
+          logInfoLocal('Entity builded');
 
           await sendRecordToDiff(entity);
-          logInfo('Send to dif queue');
+          logInfoLocal('Send to dif queue');
 
           msg.ack();
         } else {
@@ -47,7 +48,7 @@ export const sendRecordToDiff = async (data: entity) => {
   try {
     await menash.send(config.rabbit.sendData, data);
   } catch (error) {
-    logInfo(`${error}`.split('at C')[0]);
+    logError(error, data);
   }
 };
 
