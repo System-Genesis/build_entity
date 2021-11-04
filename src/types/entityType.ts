@@ -1,5 +1,5 @@
 export interface entity {
-  goalUserId?:string;
+  goalUserId?: string;
   entityType?: string;
   identityCard?: string;
   personalNumber?: string;
@@ -13,7 +13,7 @@ export interface entity {
   mobilePhone?: string[];
   address?: string;
   clearance?: string;
-  picture?: {
+  pictures?: {
     profile?: {
       path?: string;
       meta?: any;
