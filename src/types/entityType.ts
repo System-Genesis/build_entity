@@ -15,7 +15,6 @@ export interface entity {
   clearance?: string;
   pictures?: {
     profile?: {
-      path?: string;
       meta?: any;
     };
   };
