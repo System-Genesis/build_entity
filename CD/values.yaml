@@ -1,4 +1,4 @@
-name: "buildEntities"
+name: "build-entities"
 replicaCount: 1
 
 images:
@@ -22,4 +22,4 @@ service:
 
 config:
   configmaps: 
-    name: buildEntities
+    name: build-entities
