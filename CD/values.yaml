@@ -4,7 +4,7 @@ replicaCount: 1
 images:
   PullSecrets: 
     name: kartingreg
-  repository: rabazhub.azurecr.io/values-test
+  repository: genesisproject.azurecr.io/build-entity
   tag: "latest"
 
 service:
@@ -14,21 +14,12 @@ service:
     port: 3000
 
 # volume:
-#   -name:
-#    mountPath:
-#    type:
-#    claimName:
+#   - name: buildEntities-volume
+#     mountPath: 
+#     secretName: azure-secret 
+#     shareName: system-genesis/ 
+#     type: azurefile 
 
 config:
   configmaps: 
     name: buildEntities
-
-ingress:
-  enabled: true
-  hosts:
-  - host: test-cd.branch-yesodot.org
-    paths:
-      - path: /message
-        service: testname
-        port: "3000"
-  
