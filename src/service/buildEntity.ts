@@ -3,9 +3,9 @@ import { entity } from '../types/entityType';
 import { akaStr, sourceHierarchy } from '../utils/entity.utils';
 import { getPrimeSource, sortAka, sortSource } from '../utils/entity.utils';
 import { mergedObj, identifiers } from '../types/mergedObjType';
-import { logInfo, logWarn } from '../logger/logger';
 import { record } from '../types/recordType';
 import fieldsName from '../config/fieldsName';
+import logger from 'logger-genesis';
 
 /**
  * Create array of records ordered by hierarchy of source
@@ -17,7 +17,9 @@ import fieldsName from '../config/fieldsName';
  */
 export const getRecordsByHierarchy = (data: mergedObj): record[] => {
   const primeUnitStr = getPrimeSource(data.aka || data.city);
-  logInfo('Prime source = "' + primeUnitStr + '".', data.identifiers);
+  logger.info(true, 'APP', `Prime source = ${primeUnitStr}.`, `Prime source = ${primeUnitStr}.`, {
+    id: data.identifiers,
+  });
 
   const allRecords: any = [];
   let akaRecords: entity[] = [];
@@ -50,7 +52,7 @@ export const buildEntity = (allRecords: record[], identifiers: identifiers): ent
 
     allRecords.forEach((record) => (entity = setEntity(record, logMsg, entity)));
 
-    logInfo(logMsg.msg, identifiers);
+    logger.info(true, 'APP', 'Entity Builded', logMsg.msg, { id: identifiers });
   } else {
     allRecords.reverse().forEach((record) => Object.assign(entity, getTruthyFields(record)));
   }
@@ -59,8 +61,7 @@ export const buildEntity = (allRecords: record[], identifiers: identifiers): ent
   if (entity.entityType == fieldsName.entityType.s && entity.identityCard) {
     entity.entityType = gerPriorityEntityType(allRecords, entity.entityType, identifiers);
   }
-
-  logInfo('Result entity => ', entity);
+  logger.info(false, 'APP', 'Result Entity', JSON.stringify(entity), entity);
   return entity;
 };
 
@@ -76,8 +77,7 @@ export const createEntity = async (data: mergedObj) => {
   if (allRecords.length > 0) {
     return buildEntity(allRecords, data.identifiers);
   }
-
-  logWarn(`Didn't get any record`, data.identifiers);
+  logger.error(false, 'APP', `Didn't get any record`, JSON.stringify(data), data.identifiers);
   return null;
 };
 
@@ -94,14 +94,12 @@ function mapToDSRecords(source: string): any {
   };
 }
 
-export function gerPriorityEntityType(
-  allRecords: record[],
-  entityType: string,
-  identifiers: identifiers
-): string {
+export function gerPriorityEntityType(allRecords: record[], entityType: string, identifiers: identifiers): string {
   for (const record of allRecords) {
     if (record.entityType === fieldsName.entityType.c) {
-      logInfo(`Change entityType to ${fieldsName.entityType.c} from ${record.source}`, identifiers);
+      logger.info(false, 'APP', 'Change Entity Type', `Change to ${fieldsName.entityType.c}, source ${record.source}`, {
+        id: identifiers,
+      });
       return record.entityType;
     }
   }
