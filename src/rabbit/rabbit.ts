@@ -6,14 +6,13 @@ import { entity } from '../types/entityType';
 import { mergedObj } from '../types/mergedObjType';
 
 export const connectRabbit = async () => {
-  logger.info(false, 'SYSTEM', 'Try to connect to Rabbit...', '');
+  console.log('Try to connect to Rabbit...');
   await menash.connect(config.rabbit.uri, config.rabbit.retryOptions);
 
   await menash.declareQueue(config.rabbit.getData);
   await menash.declareQueue(config.rabbit.sendData);
-  await menash.declareQueue(config.rabbit.logger);
 
-  logger.info(false, 'SYSTEM', 'Rabbit connected', '');
+  console.log('Rabbit connected');
 
   await menash.queue(config.rabbit.getData).activateConsumer(
     async (msg: ConsumerMessage) => {
