@@ -9,8 +9,8 @@ export const connectRabbit = async () => {
   console.log('Try to connect to Rabbit...');
   await menash.connect(config.rabbit.uri, config.rabbit.retryOptions);
 
-  await menash.declareQueue(config.rabbit.getData);
-  await menash.declareQueue(config.rabbit.sendData);
+  await menash.declareQueue(config.rabbit.getData, { durable: true });
+  await menash.declareQueue(config.rabbit.sendData, { durable: true });
 
   console.log('Rabbit connected');
 
@@ -43,7 +43,7 @@ export const connectRabbit = async () => {
 
 export const sendRecordToCreate = async (data: entity) => {
   try {
-    await menash.send(config.rabbit.sendData, data);
+    await menash.send(config.rabbit.sendData, data, { persistent: true });
   } catch (error) {
     logger.error(true, 'SYSTEM', 'Send to create Fail', JSON.stringify(error));
   }
