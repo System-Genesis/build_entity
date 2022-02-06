@@ -2,7 +2,7 @@ Build entity from merge object
 
 Arrange all sources by priority (Get the primary source for priority)
 Run over the array of source and get the data (or set data if not exist or run in reverse order and assign the new value)
-Fix the entity by specific roles (c require id, p require pn, gu forbidden rand and dischargeDate)
+Fix the entity by specific roles (set as c if can, gu forbidden rand and dischargeDate)
 
 - mergedObject EXAMPLE
 - mergedObj :{
