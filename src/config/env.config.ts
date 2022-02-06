@@ -17,4 +17,5 @@ export default {
     },
   },
   ds_h: env.get('DS_H').required().asArray(),
+  goalUserForbiddenFields: env.get('GOAL_USER_FORBIDDEN_FIELDS').required().asArray(),
 };

@@ -1,7 +1,7 @@
 import logger from 'logger-genesis';
 import menash, { ConsumerMessage } from 'menashmq';
 import config from '../config/env.config';
-import { createEntity } from '../service/buildEntity';
+import { createEntity } from '../service/service';
 import { entity } from '../types/entityType';
 import { mergedObj } from '../types/mergedObjType';
 

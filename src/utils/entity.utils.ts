@@ -1,5 +1,4 @@
 import { units } from '../units/units';
-import { validator } from './validator.utils';
 import { record } from './../types/recordType';
 import { entity } from './../types/entityType';
 
@@ -15,9 +14,7 @@ export const akaStr = sourceHierarchy[0];
  * @param currUnit unit for search in all units and get the prime source
  * @returns source name
  */
-export const getPrimeSource = (
-  currUnit: { record: entity }[] | undefined
-): string => {
+export const getPrimeSource = (currUnit: { record: entity }[] | undefined): string => {
   if (!currUnit || currUnit.length == 0) return '';
 
   let unit: string = '';
@@ -31,23 +28,12 @@ export const getPrimeSource = (
 
 // Prefer agumon first
 export const sortSource = (curr: record, next: record) => {
-  return next.entityType === fieldsName.entityType.c ||
-    curr.entityType === fieldsName.entityType.s
-    ? -1
-    : 1;
+  return next.entityType === fieldsName.entityType.c || curr.entityType === fieldsName.entityType.s ? -1 : 1;
 };
 
 // Id first
 export const sortAka = (curr: record, _: record) => {
   return curr.rank === fieldsName.preferredRank ? 1 : -1;
-};
-
-const validatePhone = (phone: string | undefined | string[]) => {
-  if (phone) {
-    return !Array.isArray(phone) ? (phone = [phone]) : phone;
-  }
-
-  return null;
 };
 
 // For ant needed validation (in Future)
@@ -71,9 +57,8 @@ export const entityValidation = {
   // createdAt: (source: record) => source.createdAt,
   // updatedAt: (source: record) => source.updatedAt,
   goalUserId: (source: record) => source.goalUserId,
-  identityCard: (source: record) =>
-    validator().identityCard(source.identityCard),
+  identityCard: (source: record) => source.identityCard,
   dischargeDay: (source: record) => source.dischargeDay,
-  phone: (source: record) => validatePhone(source.phone),
+  phone: (source: record) => source.phone,
   mobilePhone: (source: record) => source.mobilePhone,
 };
