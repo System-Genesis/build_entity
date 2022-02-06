@@ -5,7 +5,6 @@ Run over the array of source and get the data (or set data if not exist or run i
 Fix the entity by specific roles (set as c if can, gu forbidden rand and dischargeDate)
 
 - mergedObject EXAMPLE
-- mergedObj :
 ```
   {
         "_id" : ObjectId("61b9fe3272aeff3cbe6c0ed9"),
