@@ -42,6 +42,13 @@ export const buildEntity = (allRecords: record[], identifiers: identifiers): ent
   return entity;
 };
 
+/**
+ * check if need to change entity type because source that not in priority has the priority entity type
+ * @param allRecords from mergedObj
+ * @param entityType current type
+ * @param identifiers of entity for logs
+ * @returns the entity entity type
+ */
 export function gerPriorityEntityType(allRecords: record[], entityType: string, identifiers: identifiers): string {
   for (const record of allRecords) {
     if (record.entityType === fieldsName.entityType.c) {
@@ -55,6 +62,7 @@ export function gerPriorityEntityType(allRecords: record[], entityType: string, 
   return entityType;
 }
 
+// delete null or undefined
 export function getTruthyFields(obj: object) {
   Object.keys(obj).forEach((field) => (!obj[field] ? delete obj[field] : null));
 
