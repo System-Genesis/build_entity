@@ -3,12 +3,5 @@ import logger from 'logger-genesis';
 
 export const initializeLogger = async () => {
   const rabbitEnv = configEnv.rabbit;
-  await logger.initialize(
-    configEnv.systemName,
-    configEnv.serviceName,
-    rabbitEnv.logger,
-    true,
-    rabbitEnv.uri,
-    rabbitEnv.retryOptions
-  );
+  await logger.initialize(configEnv.systemName, configEnv.serviceName, rabbitEnv.logger, false);
 };

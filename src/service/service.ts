@@ -1,7 +1,7 @@
 import { mergedObj } from '../types/mergedObjType';
 import { record } from '../types/recordType';
 import logger from 'logger-genesis';
-import { getRecordsByHierarchy } from './recordsByHierarchy';
+import { getRecordsByPriority } from './recordsByHierarchy';
 import { buildEntity } from './buildEntity';
 
 /**
@@ -11,7 +11,7 @@ import { buildEntity } from './buildEntity';
  * @returns Entity ready for krtfl or null if didn't get records in data
  */
 export const createEntity = async (data: mergedObj) => {
-  let allRecords: record[] = getRecordsByHierarchy(data);
+  let allRecords: record[] = getRecordsByPriority(data);
 
   if (allRecords.length > 0) {
     return buildEntity(allRecords, data.identifiers);

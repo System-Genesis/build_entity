@@ -12,7 +12,6 @@ import envConfig from '../config/env.config';
  * @param allRecords records from all given sources
  * @returns Entity ready for krtfl
  */
-
 export const buildEntity = (allRecords: record[], identifiers: identifiers): entity => {
   let entity: entity = {};
 

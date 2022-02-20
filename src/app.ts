@@ -1,7 +1,8 @@
 import { initializeLogger } from './logger/logger';
-import { connectRabbit } from './rabbit/rabbit';
+import { connectRabbit, initializeConsume } from './rabbit/rabbit';
 
 (async () => {
   await connectRabbit();
   await initializeLogger();
+  await initializeConsume();
 })();

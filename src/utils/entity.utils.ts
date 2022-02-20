@@ -12,18 +12,19 @@ export const akaStr = sourceHierarchy[0];
  * Found the source according the entity unit
  *
  * @param currUnit unit for search in all units and get the prime source
+ * USE [units] array of all unit with source
  * @returns source name
  */
 export const getPrimeSource = (currUnit: { record: entity }[] | undefined): string => {
   if (!currUnit || currUnit.length == 0) return '';
 
-  let unit: string = '';
+  let source: string = '';
 
-  Object.keys(units).forEach((u) => {
-    if (units[u].includes(currUnit[0].record.akaUnit)) unit = u;
+  Object.keys(units as { [source: string]: string[] }).forEach((u) => {
+    if (units[u].includes(currUnit[0].record.akaUnit)) source = u;
   });
 
-  return unit;
+  return source;
 };
 
 // Prefer agumon first

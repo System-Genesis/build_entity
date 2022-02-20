@@ -13,7 +13,17 @@ export const connectRabbit = async () => {
   await menash.declareQueue(config.rabbit.sendData, { durable: true });
 
   console.log('Rabbit connected');
+};
 
+export const sendRecordToCreate = async (data: entity) => {
+  try {
+    await menash.send(config.rabbit.sendData, data, { persistent: true });
+  } catch (error) {
+    logger.error(true, 'SYSTEM', 'Send to create Fail', JSON.stringify(error));
+  }
+};
+
+export const initializeConsume = async () => {
   await menash.queue(config.rabbit.getData).activateConsumer(
     async (msg: ConsumerMessage) => {
       try {
@@ -41,12 +51,4 @@ export const connectRabbit = async () => {
   );
 };
 
-export const sendRecordToCreate = async (data: entity) => {
-  try {
-    await menash.send(config.rabbit.sendData, data, { persistent: true });
-  } catch (error) {
-    logger.error(true, 'SYSTEM', 'Send to create Fail', JSON.stringify(error));
-  }
-};
-
-export default { connectRabbit, sendRecordToDiff: sendRecordToCreate };
+export default { connectRabbit, sendRecordToCreate, initializeConsume };

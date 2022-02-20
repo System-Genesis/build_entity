@@ -13,10 +13,9 @@ import logger from 'logger-genesis';
  * @param data original obj from queue
  * @returns Array of records ordered by hierarchy
  */
-
-export const getRecordsByHierarchy = (data: mergedObj): record[] => {
-  const primeUnitStr = getPrimeSource(data.aka || data.city);
-  logger.info(true, 'APP', `Prime source = ${primeUnitStr}.`, `Prime source = ${primeUnitStr}.`, {
+export const getRecordsByPriority = (data: mergedObj): record[] => {
+  const primeSourceStr = getPrimeSource(data.aka || data.city);
+  logger.info(true, 'APP', `Prime source = ${primeSourceStr}.`, `Prime source = ${primeSourceStr}.`, {
     id: data.identifiers,
   });
 
@@ -29,7 +28,7 @@ export const getRecordsByHierarchy = (data: mergedObj): record[] => {
       const records = data[source]?.map(mapToDSRecords(source)).sort(sortSource);
 
       if (source === akaStr) akaRecords = records.sort(sortAka);
-      else if (source === primeUnitStr) primeRecords = records;
+      else if (source === primeSourceStr) primeRecords = records;
       else records.forEach((record: entity) => allRecords.push(record));
     }
   });
@@ -37,6 +36,7 @@ export const getRecordsByHierarchy = (data: mergedObj): record[] => {
   return [...akaRecords, ...primeRecords, ...allRecords];
 };
 
+// TODO check if necessary
 export function mapToDSRecords(source: string): any {
   return ({ record }) => {
     record.source = source;
