@@ -1,8 +1,7 @@
-import chai, { assert } from 'chai';
-import { createEntity } from './../src/service/buildEntity';
+import { createEntity } from './../src/service/service';
 import { mergedObj } from '../src/types/mergedObjType';
 
-chai.should();
+jest.mock('logger-genesis');
 
 describe('all', () => {
   describe('hierarchy', () => {
@@ -20,7 +19,7 @@ describe('all', () => {
 
       const res = (await createEntity(data)) || { firstName: 'error' };
 
-      assert.equal(res.firstName, 'd');
+      expect(res.firstName).toEqual('d');
     });
 
     it('Should prefer aka fields vs prime source fields', async () => {
@@ -37,7 +36,7 @@ describe('all', () => {
 
       const res = (await createEntity(data)) || { firstName: 'error' };
 
-      assert.equal(res.firstName, 'd');
+      expect(res.firstName).toEqual('d');
     });
 
     it('Should prefer prime fields vs other source fields', async () => {
@@ -55,7 +54,7 @@ describe('all', () => {
 
       const res = (await createEntity(data)) || { firstName: 'error' };
 
-      assert.equal(res.firstName, 'd');
+      expect(res.firstName).toEqual('d');
     });
   });
 
@@ -76,9 +75,9 @@ describe('all', () => {
 
       const res = (await createEntity(data)) || { clearance: 'error' };
 
-      assert.equal(res.clearance, 'good');
-      assert.equal(res.rank, 'good rank');
-      assert.equal(res.address, 'address');
+      expect(res.clearance).toEqual('good');
+      expect(res.rank).toEqual('good rank');
+      expect(res.address).toEqual('address');
     });
 
     it('Should ignore undefined fields', async () => {
@@ -94,7 +93,7 @@ describe('all', () => {
 
       const res = (await createEntity(data)) || { firstName: 'error' };
 
-      assert.isFalse(Object.keys(res).includes('lastName'));
+      expect(Object.keys(res)).not.toContain('lastName');
     });
 
     it('Should insert personalNumber = 9 ', async () => {
@@ -113,8 +112,8 @@ describe('all', () => {
 
       const res = (await createEntity(data)) || { firstName: 'error' };
 
-      assert.equal(res.firstName, 'win');
-      assert.equal(res.lastName, 'last');
+      expect(res.firstName).toEqual('win');
+      expect(res.lastName).toEqual('last');
     });
   });
 });

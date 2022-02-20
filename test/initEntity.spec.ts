@@ -1,10 +1,10 @@
-import chai, { assert } from 'chai';
 import { entity } from '../src/types/entityType';
 import { setEntity, setSpecificField, validateFields } from '../src/service/setEntity';
 import { getPrimeSource } from '../src/utils/entity.utils';
 import { record } from './../src/types/recordType';
 
-chai.should();
+jest.mock('logger-genesis');
+
 const logMsg = { msg: '' };
 
 describe('init entity', () => {
@@ -18,7 +18,7 @@ describe('init entity', () => {
       };
 
       const res = validateFields(record);
-      assert.deepEqual(res, [ 'entityType','clearance', 'identityCard']);
+      expect(res).toEqual(['entityType', 'clearance', 'identityCard']);
     });
 
     it('Some validation Should fail', () => {
@@ -30,8 +30,8 @@ describe('init entity', () => {
       };
 
       const res = validateFields(record);
-            
-      assert.notDeepEqual(res, [ 'entityType','clearance', 'identityCard']);
+
+      expect(res).not.toContain(['entityType', 'clearance', 'identityCard']);
     });
   });
 
@@ -47,8 +47,8 @@ describe('init entity', () => {
       setSpecificField(entity, record, 'clearance');
       setSpecificField(entity, record, 'lastName');
 
-      assert.isString(entity.clearance);
-      assert.isFalse(Object.keys(entity).includes('lastName'));
+      expect(entity.clearance).toBeTruthy();
+      expect(Object.keys(entity)).not.toContain('lastName');
     });
 
     it('Should add fields', () => {
@@ -62,9 +62,9 @@ describe('init entity', () => {
       setSpecificField(entity, record, 'clearance');
       setSpecificField(entity, record, 'lastName');
 
-      assert.isString(entity.clearance);
-      assert.isString(entity.lastName);
-      assert.isUndefined(entity.firstName);
+      expect(entity.clearance).toBeTruthy();
+      expect(entity.lastName).toBeTruthy();
+      expect(entity.firstName).toBeFalsy();
     });
   });
 
@@ -84,7 +84,7 @@ describe('init entity', () => {
 
       const actual = setEntity(record, logMsg, entity);
 
-      assert.deepEqual(expected, actual);
+      expect(expected).toEqual(actual);
     });
 
     it('Should not init fail validation field', () => {
@@ -96,11 +96,11 @@ describe('init entity', () => {
       };
 
       const res = setEntity(record, logMsg);
+      expect(res.clearance).toBeTruthy();
+      expect(res.lastName).toBeTruthy();
 
-      assert.isString(res.clearance);
-      assert.isString(res.lastName);
-      assert.isFalse(Object.keys(res).includes('identityCard'));
-      assert.isFalse(Object.keys(res).includes('ds'));
+      expect(Object.keys(res)).not.toContain('identityCard');
+      expect(Object.keys(res)).not.toContain('dc');
     });
 
     it('Should add fields', () => {
@@ -116,8 +116,8 @@ describe('init entity', () => {
 
       const res = setEntity(record, logMsg, entity);
 
-      assert.equal(res.clearance, 'c');
-      assert.equal(res.lastName, 'b');
+      expect(res.clearance).toEqual('c');
+      expect(res.lastName).toEqual('b');
     });
 
     it('Should not override existing field', () => {
@@ -135,8 +135,8 @@ describe('init entity', () => {
 
       const res = setEntity(record, logMsg, entity);
 
-      assert.equal(res.clearance, 'c');
-      assert.equal(res.lastName, 'd');
+      expect(res.clearance).toEqual('c');
+      expect(res.lastName).toEqual('d');
     });
   });
 
@@ -145,28 +145,28 @@ describe('init entity', () => {
       const unit = [{ record: { akaUnit: 'sf1' } }];
       const res = getPrimeSource(unit);
 
-      assert.equal(res, 'sf');
+      expect(res).toEqual('sf');
     });
 
     it('Should not find unit', () => {
       const unit = [{ record: { akaUnit: 'sf1s' } }];
       const res = getPrimeSource(unit);
 
-      assert.notEqual(res, 'sf');
+      expect(res).not.toEqual('sf');
     });
 
     it('Should return "" because akaUnit dos not exits', () => {
       const unit = [{ record: {} }];
       const res = getPrimeSource(unit);
 
-      assert.equal(res, '');
+      expect(res).toEqual('');
     });
 
     it('Should not find source, aka does not a unit ', () => {
       const unit = [{ record: { akaUnit: 'aka' } }];
       const res = getPrimeSource(unit);
 
-      assert.notEqual(res, 'aka');
+      expect(res).not.toEqual('aka');
     });
   });
 });

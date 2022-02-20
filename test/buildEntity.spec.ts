@@ -1,14 +1,14 @@
-import chai, { assert } from 'chai';
 import fieldsName from '../src/config/fieldsName';
-import { buildEntity, getRecordsByHierarchy } from '../src/service/buildEntity';
+import { buildEntity } from '../src/service/buildEntity';
+import { getRecordsByPriority } from '../src/service/recordsByHierarchy';
 import { record } from '../src/types/recordType';
 
-chai.should();
+jest.mock('logger-genesis');
 
 describe('Build entity', () => {
-  describe('GetRecordsByHierarchy', () => {
+  describe('getRecordsByPriority', () => {
     it('Should prefer aka source first', () => {
-      const res = getRecordsByHierarchy({
+      const res = getRecordsByPriority({
         aka: [{ record: { akaUnit: 'aka' } }],
         city: [{ record: { akaUnit: 'b' } }],
         adNn: [{ record: { akaUnit: 'c' } }],
@@ -16,11 +16,11 @@ describe('Build entity', () => {
         identifiers: { personalNumber: '', identityCard: '', goalUser: '' },
       });
 
-      assert.equal(res[0].akaUnit, 'aka');
+      expect(res[0].akaUnit).toEqual('aka');
     });
 
     it('Should prefer prime source second', () => {
-      const res = getRecordsByHierarchy({
+      const res = getRecordsByPriority({
         aka: [{ record: { akaUnit: 'sf1' } }],
         city: [{ record: { akaUnit: 'b' } }],
         adNn: [{ record: { akaUnit: 'c' } }],
@@ -28,11 +28,11 @@ describe('Build entity', () => {
         identifiers: { personalNumber: '', identityCard: '', goalUser: '' },
       });
 
-      assert.equal(res[1].akaUnit, 'sf');
+      expect(res[1].akaUnit).toEqual('sf');
     });
 
     it('Should Order by hierarchy of source', () => {
-      const res = getRecordsByHierarchy({
+      const res = getRecordsByPriority({
         aka: [{ record: { akaUnit: 'sf1' } }],
         city: [{ record: { akaUnit: 'city' } }],
         adNn: [{ record: { akaUnit: 'adNn' } }],
@@ -40,8 +40,8 @@ describe('Build entity', () => {
         identifiers: { personalNumber: '', identityCard: '', goalUser: '' },
       });
 
-      assert.equal(res[2].akaUnit, 'city');
-      assert.equal(res[3].akaUnit, 'adNn');
+      expect(res[2].akaUnit).toEqual('city');
+      expect(res[3].akaUnit).toEqual('adNn');
     });
   });
 
@@ -57,7 +57,7 @@ describe('Build entity', () => {
 
       const res = buildEntity(records, { identityCard: '207026568' });
 
-      assert.equal(fieldsName.entityType.c, res.entityType);
+      expect(fieldsName.entityType.c).toEqual(res.entityType);
     });
 
     it('Should return entity type S', () => {
@@ -71,7 +71,7 @@ describe('Build entity', () => {
 
       const res = buildEntity(records, { personalNumber: '2131' });
 
-      assert.equal(fieldsName.entityType.s, res.entityType);
+      expect(fieldsName.entityType.s).toEqual(res.entityType);
     });
 
     it('Should return entity type G', () => {
@@ -85,7 +85,7 @@ describe('Build entity', () => {
 
       const res = buildEntity(records, { personalNumber: '2131' });
 
-      assert.equal(fieldsName.entityType.g, res.entityType);
+      expect(fieldsName.entityType.g).toEqual(res.entityType);
     });
   });
 });
