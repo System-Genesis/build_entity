@@ -88,4 +88,18 @@ describe('Build entity', () => {
       expect(fieldsName.entityType.g).toEqual(res.entityType);
     });
   });
+
+  describe('Should delete forbidden fields for entity type g', () => {
+    const records: record[] = [
+      { source: 'aka', firstName: 'a', identityCard: '1564151' },
+      { source: 'es', firstName: 'b', entityType: fieldsName.entityType.g },
+      { source: 'sf', firstName: 'sf', entityType: fieldsName.entityType.s },
+      { source: 'ads', firstName: 'c', entityType: fieldsName.entityType.s },
+      { source: 'adnn', firstName: 'e', entityType: fieldsName.entityType.c },
+    ];
+
+    const res = buildEntity(records, { goalUser: '2131' });
+
+    expect(res.identityCard).toBeFalsy();
+  });
 });
