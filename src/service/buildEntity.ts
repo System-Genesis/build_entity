@@ -50,7 +50,7 @@ export const buildEntity = (allRecords: record[], identifiers: identifiers): ent
  */
 export function gerPriorityEntityType(allRecords: record[], entityType: string, identifiers: identifiers): string {
   for (const record of allRecords) {
-    if (record.entityType === fieldsName.entityType.c) {
+    if (record.entityType === fieldsName.entityType.c && record.source != envConfig.mir_name) {
       logger.info(false, 'APP', 'Change Entity Type', `Change to ${fieldsName.entityType.c}, source ${record.source}`, {
         id: identifiers,
       });
