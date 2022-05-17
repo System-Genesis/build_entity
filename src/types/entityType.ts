@@ -20,4 +20,7 @@ export interface entity {
   };
   sex?: string;
   birthDate?: Date;
+  employeeId?: string;
+  employeeNumber?: string;
+  organization?: string;
 }

@@ -41,6 +41,9 @@ export const sortAka = (curr: record, _: record) => {
 export const entityValidation = {
   entityType: (source: record) => source.entityType,
   personalNumber: (source: record) => source.personalNumber,
+  employeeId: (source: record) => source.employeeId,
+  employeeNumber: (source: record) => source.employeeNumber,
+  organization: (source: record) => source.organization,
   serviceType: (source: record) => source.serviceType,
   firstName: (source: record) => source.firstName,
   lastName: (source: record) => source.lastName,

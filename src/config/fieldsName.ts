@@ -3,6 +3,7 @@ export default {
     s: 'agumon',
     c: 'digimon',
     g: 'goalUser',
+    e: 'external'
   },
   preferredRank: 'az',
 };

@@ -4,6 +4,7 @@ export type identifiers = {
   personalNumber?: string;
   identityCard?: string;
   goalUser?: string;
+  employeeId?: string;
 };
 
 export type mergedObj = {
