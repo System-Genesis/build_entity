@@ -10,6 +10,7 @@ export interface entity {
   rank?: string;
   serviceType?: string;
   phone?: string[];
+  fullClearance?: string;
   mobilePhone?: string[];
   address?: string;
   clearance?: string;

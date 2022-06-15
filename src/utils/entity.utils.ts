@@ -55,6 +55,7 @@ export const entityValidation = {
   // mail: (source: record) => source.mail,
   address: (source: record) => source.address,
   clearance: (source: record) => source.clearance,
+  fullClearance: (source: record) => source.fullClearance,
   pictures: (source: record) => source.pictures,
   sex: (source: record) => source.sex,
   birthDate: (source: record) => source.birthDate,
